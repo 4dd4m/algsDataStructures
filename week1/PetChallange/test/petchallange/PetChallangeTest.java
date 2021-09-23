@@ -1,8 +1,5 @@
 package petchallange;
 
-
-
-
 public class PetChallangeTest {
    
 
