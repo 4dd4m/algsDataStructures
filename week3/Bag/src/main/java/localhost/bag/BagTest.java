@@ -12,9 +12,9 @@ public class BagTest {
     public static void main(String[] args) {
 
         // Create an object of ArrayBag<String>
-        ArrayBag<String> testArrayBag = new ArrayBag<String>(8);
+        LinkedBag<String> testArrayBag = new LinkedBag<String>();
         System.out.println("------------------------------------------------------");
-        System.out.println("BAG TEST:");
+        System.out.println("LINKED BAG TEST:");
         System.out.println("Initial state of Bag:");
 
         // Output the current status of the bag:
@@ -87,8 +87,8 @@ public class BagTest {
      * Method to output a report on the current contents and status of the bag.
      * @param myBag The bag being reported upon.
      */
-    public static void bagStatusReport(ArrayBag<String> myBag) {
-        myBag.display();
+    public static void bagStatusReport(LinkedBag<String> myBag) {
+        
         System.out.println("Size: " + myBag.getCurrentSize());
         System.out.println("Is empty: " + myBag.isEmpty());
         System.out.println("Frequency of A: " + myBag.getFrequencyOf("A"));
@@ -99,5 +99,6 @@ public class BagTest {
         System.out.println("Bag contains B: " + myBag.contains("B"));
         System.out.println("Bag contains C: " + myBag.contains("C"));
         System.out.println("Bag contains D: " + myBag.contains("D"));
+        myBag.display();
     }
 }

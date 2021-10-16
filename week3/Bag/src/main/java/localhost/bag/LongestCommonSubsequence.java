@@ -1,6 +1,4 @@
 package localhost.bag;
-
-import java.util.Scanner;
 import localhost.bag.ArrayBag;
 import localhost.bag.BagInterface;
 
@@ -20,9 +18,6 @@ public class LongestCommonSubsequence {
 
         ArrayBag<String> testBag = new ArrayBag<>(5);
         String strBestSubsequence = null;
-
-        //Scanner input;
-            //input = new Scanner(System.in);
 
         System.out.println("-------------------------------------------------------------------------------------");
         System.out.println("This program determines the longest string that is a subsequence of two input strings.");

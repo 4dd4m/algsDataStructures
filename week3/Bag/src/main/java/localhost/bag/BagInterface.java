@@ -4,7 +4,7 @@ public interface BagInterface<T>{
 
 int getCurrentSize();
 boolean isEmpty();
-String addNewEntry(T newEntry);
+boolean addNewEntry(T newEntry);
 T remove();
 boolean remove(T anEntry);
 void clear();

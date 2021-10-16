@@ -51,11 +51,12 @@ public final class ArrayBag<T> implements BagInterface<T>{
         return (bag.length == numberOfEntries);
     }
 
-    public String addNewEntry(T newEntry){
-        if (!isArrayFull()){
+    public boolean addNewEntry(T newEntry){
+        if (isArrayFull()) return false;
+        else{
             bag[numberOfEntries++] = newEntry;
         }
-        return (String) newEntry;
+        return true;
     }
 
     public T remove(){
@@ -114,34 +115,15 @@ public final class ArrayBag<T> implements BagInterface<T>{
         System.arraycopy(bag, 0, resultArray, 0, numberOfEntries);
         return resultArray;
     }
-    
-     void display(){
-        System.out.println("------- RECURSION ----------");
-        displayArray(0, numberOfEntries  - 1);
-        System.out.println("------ END OF RECURSION -----");
-    }
-    
-    private void displayArray(int first, int last){
-        System.out.println(bag[first]);
-        if (first < last) {
-            displayArray(first+1,last);
-        }
-        
-    }
-    
-    
 
     public static void main(String[] args) {
         ArrayBag<String> bagOfNames = new ArrayBag<String>(5);
-        System.out.println("Adding Adrian1: " + bagOfNames.addNewEntry("Adrian1"));
-        System.out.println("Adding Adrian2: " + bagOfNames.addNewEntry("Adrian2"));
-        System.out.println("Adding Adrian3: " + bagOfNames.addNewEntry("Adrian3"));
-        System.out.println("Adding Adrian4: " + bagOfNames.addNewEntry("Adrian4"));
-        System.out.println("Adding Adrian5: " + bagOfNames.addNewEntry("Adrian5"));
-        System.out.println("Adding  Adrian6: " + bagOfNames.addNewEntry("Adrian6"));
-        bagOfNames.display();
-        
-        
+        System.out.println("Adrian" + bagOfNames.addNewEntry("Adrian"));
+        System.out.println("Adrian" + bagOfNames.addNewEntry("Adrian"));
+        System.out.println("Adrian" + bagOfNames.addNewEntry("Adrian"));
+        System.out.println("Adrian" + bagOfNames.addNewEntry("Adrian"));
+        System.out.println("Adrian" + bagOfNames.addNewEntry("Adrian"));
+        System.out.println("Adrian" + bagOfNames.addNewEntry("Adrian"));
         Object[] arrayOfNames = bagOfNames.toArray();
         for (Object name : arrayOfNames) {
             System.out.println(name + "... ");
