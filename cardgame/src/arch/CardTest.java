@@ -5,10 +5,8 @@ public class CardTest {
     public static void state(Card c){
         System.out.println("Suit:\t\t\t" + c.getSuit());
         System.out.println("isFace:\t\t\t" + c.isFace());
-        System.out.println("Denoted:\t\t" + c.getDenoted());
         System.out.println("cardValue:\t\t" + c.getCardValue());
-        System.out.println("callOut: \t\t" + c.toString());
-        System.out.println("toArray.length\t" + c.callOut() + "\n");
+        System.out.println("callOut: \t\t" + c.toString() + "\n");
     }
 
     public static void main(String[] args) {

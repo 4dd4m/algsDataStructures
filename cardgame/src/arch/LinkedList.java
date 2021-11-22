@@ -19,7 +19,7 @@ public class LinkedList<T>{
         return lastNode;
     }
 
-    public Integer getSize() {
+    public int getSize() {
         return size;
     }
 
@@ -132,7 +132,7 @@ public class LinkedList<T>{
         return null;
     }
 
-    public T[] toArray(){
+    public T[] toArray() throws EmptyDeckException{
         T[] resultArray = (T[]) new Object[size];
 
         if (isEmpty() == true)

@@ -1,21 +1,15 @@
 package arch;
 
 public class Card<T> extends Node{
-    private String suit;
+    private String  suit, strSuit;
     private boolean isFace;
-    private String denoted;
-    private int cardValue;
+    private int     cardValue;
 
     public Card(int pValue, String pSuit) {
         super(pValue);
         cardValue = validateValue(pValue);
-        suit = validateSuit(pSuit);
         setIsFaceCard();
-        denoted = setDenote();
-    }
-
-    private void setIsFaceCard(){
-        isFace = cardValue >= 11 && cardValue <= 13;
+        validateSuit(pSuit);
     }
 
     private int validateValue(int value) throws IllegalStateException{
@@ -26,16 +20,32 @@ public class Card<T> extends Node{
         }
     }
 
-    private String validateSuit(String suit) throws IllegalStateException{
-        String suitLower = suit.toLowerCase();
+    private void validateSuit(String pSuit) throws IllegalStateException{
+        String suitLower = pSuit.toLowerCase();
+        String tmpsuit = "";
         if (suitLower.equals("s") || suitLower.equals("c") || suitLower.equals("h") || suitLower.equals("d")){
-            return suitLower;
+            switch (suitLower){
+                case "s":
+                    tmpsuit = "♠";
+                    break;
+                case "c":
+                    tmpsuit = "♣";
+                    break;
+                case "h":
+                    tmpsuit = "♥";
+                    break;
+                case "d":
+                    tmpsuit = "♦";
+                    break;
+            }
+            strSuit = suitLower;
+            suit =  tmpsuit;
         }else{
-            throw new IllegalStateException("Invalid Suit: " + suit);
+            throw new IllegalStateException("Invalid Suit: " + pSuit);
         }
     }
 
-    private String setDenote(){
+    public String toString() throws IllegalStateException{
         String tmpDenoted = "";
         switch (cardValue) {
             case 1:  tmpDenoted = "A";
@@ -51,36 +61,15 @@ public class Card<T> extends Node{
                 break;
             case 13:  tmpDenoted = "K";
                 break;
-            default: tmpDenoted = "-1";
-                break;
+            default:
+                throw new IllegalStateException("Unknown cardValue: " + cardValue);
         }
-        return tmpDenoted;
+        return tmpDenoted+this.suit;
     }
 
-    public String callOut(){
-        return cardValue + " of " + suit;
-    }
-
-    @Override
-    public String toString() {
-        //System.out.println(Integer.toString(cardValue));
-        return "["+Integer.toString(cardValue)+"]";
-    }
-    public int getCardValue() {
-        return cardValue;
-    }
-
-    public String getSuit() {
-        return suit;
-    }
-
-    public boolean isFace() {
-        return isFace;
-    }
-
-    public String getDenoted() {
-        return denoted;
-    }
-
-
+    public int getCardValue() {return cardValue;}
+    public String getSuit()   {return suit;}
+    public boolean isFace()   {return isFace;}
+    public String getStrSuit(){return strSuit;}
+    private void setIsFaceCard(){isFace = cardValue >= 11 && cardValue <= 13;}
 }

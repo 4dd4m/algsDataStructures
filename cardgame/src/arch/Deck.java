@@ -1,82 +1,117 @@
 package arch;
-import arch.*;
-
-public class Deck<T> extends LinkedList{
-
-    private Card firstNode;
-    private Card lastNode;
+public class Deck extends LinkedList<Card>{
+    private Card next, firstCard, lastCard;
     private boolean lock = false;
-
-    private int MAXCARDS = 52;
-    private int numOfCards = 0;
-
     private static final String[] SUITS = {"h","d","s","c"};
 
-    public Deck(){
+    public Deck() throws LockedDeckException, NullPointerException{     //build a standard deck
         for (int r = 1; r <= 13 ; r++) {
             for (int s = 0; s <= 3 ; s++) {
                 addNewEntry(new Card(r, SUITS[s]));
-                numOfCards++;
             }
         }
     }
 
-    public boolean addNewEntry(Card newEntry) throws IllegalStateException {
-        if (lock == true){ //when the deck is locked (after shuffle), disable the method
-            throw new IllegalStateException("Deck is Locked, not modifiable");
-        }
+    public Deck(boolean b) throws LockedDeckException, NullPointerException{    //just create an empty deck
+    }
 
-        Card newNode = newEntry;
-        newNode.setNext(firstNode);
-        firstNode = newNode;
+    public Card remove() throws IllegalStateException{
+        if (size == 0){throw new IllegalStateException("Cannot remove a Card from an empty deck");}
+        if(firstCard != null){                                      //removing the very first card
+            Card first = firstCard;                                 //tmp the first card
+            firstCard = (Card) firstCard.getNext();                 //update the new first card
+            size--;
+            if (size == 1) setLastNode();                           //for integrity
+            return first;                                           //if card removed return with it
+        }else return null;                                          //return a BIG null
+    }
+
+    public void remove(Card aCard) throws CardNotFoundException{    //remove a specific card from the deck
+        Card currentCard = firstCard;
+        boolean found = false;
+        if (currentCard.getCardValue() == aCard.getCardValue() &&   //remove the first element
+                currentCard.getStrSuit() == aCard.getStrSuit()) {   //of the list
+            firstCard = (Card) currentCard.getNext();
+            size--;
+            found = true;
+        }
+        while(!found && currentCard.getNext() != null){             //iterate throughout the list
+            Card nextCard = (Card) currentCard.getNext();
+
+            if (nextCard.getCardValue() == aCard.getCardValue() &&  //if both suit and value ar the same
+                    nextCard.getStrSuit() == aCard.getStrSuit()) {  //we found the card
+                found = true;
+                size--;
+                currentCard.setNext(nextCard.getNext());            //skipp the next card
+                break;
+            }else{
+                currentCard = (Card) currentCard.getNext();         //if no match, get the next card
+            }
+        }//endwhile
+        if (!found)
+            throw new CardNotFoundException(aCard);
+    }
+
+    public boolean addNewEntry(Card newEntry) throws LockedDeckException, NullPointerException{//add a new card to the deck
+        if (lock == true){                                 //when the deck is locked (after shuffle), disable the method
+            throw new LockedDeckException("Deck is Locked, not modifiable");
+        }
+        Card newCard = newEntry;
+        newCard.setNext(firstCard);
+        firstCard = newCard;
         size++;
-        if (getSize() == 1) //if we have only one node, we record it as a last node
-            lastNode = newNode;
+        if (getSize() == 1)                                 //if we have only one node, we record it as a last node
+            lastCard = newCard;
         return true;
     }
-    
-    public Card[] toArray(){
-        Card[] resultArray =  new Card[size];
+
+    public Card[] toArray() throws EmptyDeckException{      //array representation of the deck
+        Card[] cardArray =  new Card[size];                 //full size array
+        Card[] emptyArray = new Card[0];                    //empty array for return
 
         if (isEmpty() == true)
-            return resultArray;
+            return emptyArray;
 
-        int counter = 0;
-        Card currentNode = firstNode;
-
-        while (currentNode.getNext() != null) {
-            resultArray[counter] = currentNode;
-            currentNode = (Card) currentNode.getNext();
+        int counter = 0;                                    //build the result array
+        Card currentCard = firstCard;
+        while (currentCard.getNext() != null) {
+            cardArray[counter] = currentCard;
+            currentCard = (Card) currentCard.getNext();
             counter++;
         }
-        return resultArray;
+        //cardArray[size-1] = (Card) getLastCard();           //grab the last element
+        return cardArray;
     }
 
-    public String toString(){
-        if (isEmpty() == true) {
-            return "[]";
-        }
-        Card currentNode = firstNode;
+    public int getSize(){                                   //get the size of the deck
+        return size;
+    }
+    public String toString() throws NullPointerException{     //string representation of the array [Q♠][Q♦][Q♥]
+        Card currentCard = firstCard;
         String result = "[";
-        while (currentNode.getNext() != null) {
-            result += "["+currentNode.getCardValue()+currentNode.getSuit()+"]";
-            currentNode = (Card) currentNode.getNext();
+        while (currentCard.getNext() != null) {             //fill the array
+            result += "["+currentCard.toString()+"]";
+            currentCard = (Card) currentCard.getNext();
         }
-        //if (getLastNode() != null)
-        //result += lastNode.getData();
+        if (getLastCard() != null){
+            result += "["+currentCard.toString()+"]";       //grab the last card
+        }else{
+            throw new NullPointerException("The Deck is Empty");
+        }
+        //result += "["+currentCard.toString()+"]";
         result += "]";
         return result;
     }
 
-    public int getNumOfCards() {
-        return numOfCards;
+    public Card getFirstCard() throws NullPointerException {   //grab the first card
+        if (firstCard== null)
+            throw new NullPointerException("The Deck is Empty");
+        return firstCard;
     }
 
-    public Card getFirstCard() {
-        return firstNode;
-    }
-
-    public Card getLastCard() {
-        return lastNode;
+    public Card getLastCard() throws NullPointerException  {   //grab the last card
+        if (firstCard== null)
+            throw new NullPointerException("The Deck is Empty");
+        return lastCard;
     }
 }
