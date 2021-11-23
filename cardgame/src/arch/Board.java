@@ -1,25 +1,15 @@
 package arch;
-import java.util.Random;
-public class Board<T> extends LinkedList{
-    private Card next, firstCard, lastCard;
-
+import java.util.Objects;
+public class Board extends LinkedList<Card>{
+    private Card firstCard, lastCard;
     int cJ = 0, cQ = 0, cK = 0;
-    private final int BOARDSIZE = 9;
 
-    public Board(boolean b) throws LockedDeckException, NullPointerException{
-        firstCard = null;
-        lastCard = null;
-    }    //just create an empty deck
-
-    public Board() {
-        firstCard = null;
-        lastCard = null;
-    }
+    public Board() { firstCard = null; lastCard = null;}                      //empty deck
 
     public Card removeCard() throws IllegalStateException{
         if (size == 0){throw new IllegalStateException("Cannot remove a Card from an empty deck");}
         if(firstCard != null){                                      //removing the very first card
-            Card first = (Card) firstCard;                          //tmp the first card
+            Card first = firstCard;                                 //tmp the first card
             firstCard =  (Card) firstCard.getNext();                //update the new first card
             size--;
             if (size == 1) setLastNode();                           //for integrity
@@ -27,143 +17,113 @@ public class Board<T> extends LinkedList{
         }else return null;                                          //return a BIG null
     }
 
-    public Card removeACard(Card aCard) throws CardNotFoundException{    //remove a specific card from the deck
-        Card currentCard = (Card) firstCard;
-        Card tmpCard = currentCard;
-        boolean found = false;
-        if (currentCard.getCardValue() == aCard.getCardValue() &&   //remove the first element
-                currentCard.getStrSuit() == aCard.getStrSuit()) {   //of the list
-            firstCard = (Card) currentCard.getNext();
+    public Card removeACard(Card pc) throws CardNotFoundException{    //remove a specific card from the deck
+        Card c = firstCard;
+        Card tmpCard = c;
+        boolean f = false;
+        if (c.getCardValue() == pc.getCardValue() &&   //remove the first element
+                Objects.equals(c.getStrSuit(), pc.getStrSuit())) {   //of the list
+            firstCard = (Card) c.getNext();
             size--;
-            found = true;
+            f = true;
         }
-        while(!found && currentCard.getNext() != null){             //iterate throughout the list
-            Card nextCard = (Card) currentCard.getNext();
+        while(!f && c.getNext() != null){             //iterate throughout the list
+            Card n = (Card) c.getNext();
 
-            if (nextCard.getCardValue() == aCard.getCardValue() &&  //if both suit and value ar the same
-                    nextCard.getStrSuit() == aCard.getStrSuit()) {  //we found the card
-                found = true;
+            if (n.getCardValue() == pc.getCardValue() &&  //if both suit and value ar the same
+                    n.getStrSuit().equals(pc.getStrSuit())) {  //we found the card
                 size--;
-                currentCard.setNext(nextCard.getNext());            //skipp the next card
-                tmpCard = nextCard;
-                break;
+                c.setNext(n.getNext());            //skipp the next card
+                return n;
             }else{
-                currentCard = (Card) currentCard.getNext();         //if no match, get the next card
+                c = (Card) c.getNext();         //if no match, get the next card
             }
         }//endwhile
-        if (!found)
-            throw new CardNotFoundException(aCard);
+        if (!f)
+            throw new CardNotFoundException(pc);
         return tmpCard;
     }
 
-    public Card removeNthCard(int num) throws NullPointerException{    //remove a specific card from the deck
-        if (num < 1 || num > size)
+    public Card removeNthCard(int num) throws NullPointerException{    //remove a specific card number from the board
+        if(num < 1 || num > size)
             throw new NullPointerException("The selection is out of range");
-        Card currentCard = (Card) firstCard;
+        Card currentCard = firstCard;
         Card tmpCard = currentCard;
-        if ( num == 1) {                                             //remove the very first card
+        if(num == 1){                                             //retrieve the very first card
             firstCard = (Card) currentCard.getNext();
             size--;
             return tmpCard;
         }
         int counter = 0;
-        while(counter <= num && currentCard.getNext() != null){             //iterate throughout the list
+        while(counter <= num && currentCard.getNext() != null){             //iterate throughout the board
             Card nextCard = (Card) currentCard.getNext();
 
             if (num-2 == counter) {                                   //we found the card
                 size--;
-                currentCard.setNext(nextCard.getNext());
-                tmpCard = nextCard;                                 //skipp the next card
-                break;
+                currentCard.setNext(nextCard.getNext());              //skipp the current card
+                tmpCard = nextCard;
+                return nextCard;
             }else{
                 currentCard = (Card) currentCard.getNext();         //if no match, get the next card
             }
             counter++;
         }//endwhile
-    return tmpCard;
+        return tmpCard;
     }
 
-    public int getNthCardValue(int num) throws NullPointerException{    //remove a specific card from the deck
+    public int getNthCardValue(int num) throws NullPointerException{    //get the Nth card point value
         if (num < 1 || num > size)
             throw new NullPointerException("The selection is out of range");
-        Card currentCard = (Card) firstCard;
+        Card currentCard = firstCard;
 
-        if ( num == 1) {                                             //remove the very first card
-            return firstCard.getCardValue();
-
-        }
+        if ( num == 1) return firstCard.getCardValue();               //get the very first card
         int counter = 0;
-        while(counter <= num && currentCard.getNext() != null){             //iterate throughout the list
+        while(counter <= num && currentCard.getNext() != null){         //iterate throughout the list
             Card nextCard = (Card) currentCard.getNext();
 
-            if (num-2 == counter) {                                   //we found the card
+            if (num-2 == counter) {                                     //we found the card, return its points
                 return nextCard.getCardValue();
             }else{
-                currentCard = (Card) currentCard.getNext();         //if no match, get the next card
+                currentCard = (Card) currentCard.getNext();             //if no match, continue
             }
             counter++;
         }//endwhile
         return -1;
     }
 
-    public void clear() {
-        firstCard.setNext(null);
-        lastCard.setNext(null);
-        size = 0;
-    }
-
-    public boolean addNewEntry(Card newEntry){//add a new card to the deck
-        Card newCard = newEntry;
-        newCard.setNext(firstCard);
-        firstCard = newCard;
+    public void addNewEntry(Card newEntry){                          //add a new card to the board
+        newEntry.setNext(firstCard);
+        firstCard = newEntry;
         size++;
 
-        if (getSize() == 1)                                 //if we have only one node, we record it as a last node
-            lastCard = newCard;
+        if(getSize() == 1){                                   //if we have only one node, we record it as a lastCard
+            lastCard = newEntry;
             lastCard.setNext(null);
-
-            switch(newEntry.getCardValue()){
-                case 11:
-                    cJ++;
-                    break;
-                case 12:
-                    cQ++;
-                    break;
-                case 13:
-                    cK++;
-                    break;
-            }
-
+        }
+        switch (newEntry.getCardValue()) {                    //update KJQ counter
+            case 11 -> cJ++;
+            case 12 -> cQ++;
+            case 13 -> cK++;
+        }
             sort();
-        return true;
     }
 
-    public void sort(){
+    public void sort(){                                         //bubble sort the board
         if (size > 2) {
             for (int i = 0; i < size-1; i++ ) {
                 Card currentCard = firstCard;
                 Card nextCard = (Card) firstCard.getNext();
-                Card prevCard = null;
                 for (int j = 1; j < size; j++) {
-                    if (j == 1){
-                        prevCard = firstCard;
-                    }
-                    if (currentCard.getCardValue() > nextCard.getCardValue()) {
+                    if (currentCard.getCardValue() > nextCard.getCardValue()) { //if the current card value is greater
                         String tmpSuit = currentCard.getStrSuit();
                         int tmpValue =   currentCard.getCardValue();
-
-                        currentCard.setCardValue(nextCard.getCardValue());
+                        currentCard.setCardValue(nextCard.getCardValue());      //swap the cards
                         currentCard.setCardSuit(nextCard.getStrSuit());
                         nextCard.setCardValue(tmpValue);
                         nextCard.setCardSuit(tmpSuit);
-
                         //currentCard.setNext(nextCard.getNext());
                     }
-
-                    if(j >= 1){
-                        prevCard = currentCard;
-                    }
-                    currentCard = nextCard;
+                    currentCard = nextCard;                                    //slipping the current and nexCards
                     nextCard = (Card) nextCard.getNext();
 
                 }
@@ -171,14 +131,12 @@ public class Board<T> extends LinkedList{
         }
     }
 
-    public Card[] toArray() throws NullPointerException{      //array representation of the deck
-        Card[] cardArray =  new Card[size];                 //full size array
-        Card[] emptyArray = new Card[0];                    //empty array for return
-
-        if (isEmpty() == true)
+    public Card[] toArray() throws NullPointerException{      //array representation of the board
+        Card[] cardArray =  new Card[size];                   //full size array
+        if (isEmpty())
             throw new NullPointerException("Board is empty");
 
-        int counter = 0;                                    //build the result array
+        int counter = 0;                                      //build the result array
         Card currentCard = firstCard;
         while (currentCard.getNext() != null) {
             cardArray[counter] = currentCard;
@@ -189,24 +147,22 @@ public class Board<T> extends LinkedList{
         return cardArray;
     }
 
-    public int getSize(){                                   //get the size of the deck
-        return size;
-    }
+
     public String toString() throws NullPointerException{     //string representation of the array [Q♠][Q♦][Q♥]
         Card currentCard = firstCard;
-        String result = "[";
-        while (currentCard.getNext() != null) {             //fill the array
-            result += currentCard.toString()+" ";
+        StringBuilder result = new StringBuilder("[");
+        while (currentCard.getNext() != null) {               //fill the array
+            result.append(currentCard).append(" ");
             currentCard = (Card) currentCard.getNext();
         }
         if (getLastCard() != null){
-            result += currentCard.toString();       //grab the last card
+            result.append(currentCard);                 //grab the last card
         }else{
             throw new NullPointerException("The Deck is Empty");
         }
         //result += "["+currentCard.toString()+"]";
-        result += "]";
-        return result;
+        result.append("]");
+        return result.toString();
     }
     public Card getFirstCard() throws NullPointerException {   //grab the first card
         if (firstCard== null)
@@ -219,30 +175,15 @@ public class Board<T> extends LinkedList{
             throw new NullPointerException("The Deck is Empty");
         return lastCard;
     }
-    public int getcJ() {
-        return cJ;
-    }
 
-    public int getcQ() {
-        return cQ;
-    }
-
-    public int getcK() {
-        return cK;
-    }
-
-    public boolean isJQK(){
-        return cJ != 0 && cQ !=0 && cK != 0;
-    }
-
-    public boolean checkAnswer(int pa, int pb) throws NullPointerException{
+    public boolean checkAnswer(int pa, int pb) throws NullPointerException{         //check answer of 00 format
         if (pa == 0 || pb == 0 || pa == pb) {
             throw new NullPointerException("This selection is not allowed-> " + pa + "," + pb);
         }
         return checkAnswer(pa,pb,0);
     }
 
-    public boolean checkAnswer(int pa, int pb, int pc) throws NullPointerException{
+    public boolean checkAnswer(int pa, int pb, int pc) throws NullPointerException{ //overload for 000 format
         if (pa == 0 || pb == 0 || pa == pc) {
             throw new NullPointerException("This selection is not allowed -> " + pa + "," + pb+","+pc);
         }
@@ -257,27 +198,31 @@ public class Board<T> extends LinkedList{
         return  ((a + b + c) == 36) || ((a + b) == 11);
     }
 
-    public int[] getJQKPos() throws NullPointerException{
+    public int[] getJQKPos() throws NullPointerException{               //get the raw posish of the KJQ cards
         int[] posish = {0,0,0};
-        if (cJ == 0 || cK == 0 || cQ == 0){
+        if (cJ == 0 || cK == 0 || cQ == 0){                             //any of them 0 just return [0,0,0]
             return posish;
         }
 
-
-        for (int i = 1; i < size+1; i++) {
-            int value = getNthCardValue(i);
-           switch(value){
-               case 11:
-                   posish[0] = i;
-                   break;
-               case 12:
-                   posish[1] = i;
-                   break;
-               case 13:
-                   posish[2] = i;
-                   break;
-           }
+        for (int i = 1; i < size+1; i++) {                              //iterate the board
+            int value = getNthCardValue(i);                             //get the card point value on ith posish
+            switch (value) {
+                case 11 ->                                                 //J found
+                        posish[0] = i;
+                case 12 ->                                                 //Q found
+                        posish[1] = i;
+                case 13 ->                                                 //K found
+                        posish[2] = i;
+            }
         }
-        return posish;
+        return posish;                                                  //return the raw posish's e.g. [7,8,9]
     }
+
+    //validate a board possible combinations
+    public boolean isJQK(){return cJ != 0 && cQ !=0 && cK != 0;}        //is KJQ exists on the board
+    public int getcJ() {return cJ;}                                     //get the cJ counter
+    public int getcQ() {return cQ;}                                     //get the cQ counter
+    public int getcK() {return cK;}                                     //get the cK counter
+    public void clear() {firstCard.setNext(null);lastCard.setNext(null);size = 0;}      //clear a board (for tests)
+    public int getSize(){return size;}                                  //get the size of the board
 }

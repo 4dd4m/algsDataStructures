@@ -1,7 +1,7 @@
 package arch;
 import java.util.Random;
-public class Deck<T> extends LinkedList{
-    private Card next, firstCard, lastCard;
+public class Deck extends LinkedList{
+    private Card firstCard, lastCard;
     private final int SHUFFLESIZE = 500;
     private boolean lock = false;
     private static final String[] SUITS = {"h","d","s","c"};
@@ -17,7 +17,7 @@ public class Deck<T> extends LinkedList{
     }
 
     public void shuffle() throws LockedDeckException, EmptyDeckException {
-        if (lock == true)                                         //deck is locked after shuffle, disabling more shuffle
+        if (lock)                                         //deck is locked after shuffle, disabling more shuffle
             throw new LockedDeckException("Deck is locked");
         if (size == 0)                                            //empty deck cannot be shuffled
             throw new EmptyDeckException("The Deck is Empty");
@@ -31,7 +31,7 @@ public class Deck<T> extends LinkedList{
                 currentCard = (Card) currentCard.getNext();
                 j++;
             }
-            Card first = (Card) currentCard;                                //swap the card
+            Card first = currentCard;                                //swap the card
             Card SecondCard = (Card) currentCard.getNext();                 //insert it to the front
             Card thirdCard = (Card) currentCard.getNext().getNext();
 
@@ -46,12 +46,12 @@ public class Deck<T> extends LinkedList{
     }
 
 
-    public Deck(boolean b) throws LockedDeckException, NullPointerException{}    //just create an empty deck
+    public Deck(boolean b) throws  NullPointerException{}    //just create an empty deck
 
     public Card removeFirstCard() throws IllegalStateException{
         if (size == 0){throw new IllegalStateException("Cannot remove a Card from an empty deck");}
         if(firstCard != null){                                      //removing the very first card
-            Card first = (Card) firstCard;                          //tmp the first card
+            Card first = firstCard;                          //tmp the first card
             firstCard =  (Card) firstCard.getNext();                //update the new first card
             size--;
             if (size == 1) setLastNode();                           //for integrity
@@ -60,10 +60,10 @@ public class Deck<T> extends LinkedList{
     }
 
     public void removeFirstCard(Card aCard) throws CardNotFoundException{    //remove a specific card from the deck
-        Card currentCard = (Card) firstCard;
+        Card currentCard = firstCard;
         boolean found = false;
         if (currentCard.getCardValue() == aCard.getCardValue() &&   //remove the first element
-                currentCard.getStrSuit() == aCard.getStrSuit()) {   //of the list
+                currentCard.getStrSuit().equals(aCard.getStrSuit())) {   //of the list
             firstCard = (Card) currentCard.getNext();
             size--;
             found = true;
@@ -72,7 +72,7 @@ public class Deck<T> extends LinkedList{
             Card nextCard = (Card) currentCard.getNext();
 
             if (nextCard.getCardValue() == aCard.getCardValue() &&  //if both suit and value ar the same
-                    nextCard.getStrSuit() == aCard.getStrSuit()) {  //we found the card
+                    nextCard.getStrSuit().equals(aCard.getStrSuit())) {  //we found the card
                 found = true;
                 size--;
                 currentCard.setNext(nextCard.getNext());            //skipp the next card
@@ -86,23 +86,21 @@ public class Deck<T> extends LinkedList{
     }
 
     public boolean addNewEntry(Card newEntry) throws LockedDeckException{//add a new card to the deck
-        if (lock == true){                                 //when the deck is locked (after shuffle), disable the method
+        if (lock){                                 //when the deck is locked (after shuffle), disable the method
             throw new LockedDeckException("Deck is Locked, not modifiable");
         }
-        Card newCard = newEntry;
-        newCard.setNext(firstCard);
-        firstCard = newCard;
+        newEntry.setNext(firstCard);
+        firstCard = newEntry;
         size++;
         if (getSize() == 1)                                 //if we have only one node, we record it as a last node
-            lastCard = newCard;
+            lastCard = newEntry;
         return true;
     }
 
     public Card[] toArray() throws EmptyDeckException{      //array representation of the deck
         Card[] cardArray =  new Card[size];                 //full size array
-        Card[] emptyArray = new Card[0];                    //empty array for return
 
-        if (isEmpty() == true)
+        if (isEmpty())
             throw new EmptyDeckException("Deck is empty");
 
         int counter = 0;                                    //build the result array
@@ -121,19 +119,19 @@ public class Deck<T> extends LinkedList{
     }
     public String toString() throws NullPointerException{     //string representation of the array [Q♠][Q♦][Q♥]
         Card currentCard = firstCard;
-        String result = "[";
+        StringBuilder result = new StringBuilder("[");
         while (currentCard.getNext() != null) {             //fill the array
-            result += currentCard.toString()+" ";
+            result.append(currentCard).append(" ");
             currentCard = (Card) currentCard.getNext();
         }
         if (getLastCard() != null){
-            result += currentCard.toString();       //grab the last card
+            result.append(currentCard.toString());       //grab the last card
         }else{
             throw new NullPointerException("The Deck is Empty");
         }
         //result += "["+currentCard.toString()+"]";
-        result += "]";
-        return result;
+        result.append("]");
+        return result.toString();
     }
 
     public Card getFirstCard() throws NullPointerException {   //grab the first card
