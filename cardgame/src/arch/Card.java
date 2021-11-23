@@ -1,6 +1,6 @@
 package arch;
 
-public class Card<T> extends Node{
+public class Card extends Node{
     private String  suit, strSuit;
     private boolean isFace;
     private int     cardValue;
@@ -68,6 +68,11 @@ public class Card<T> extends Node{
     }
 
     public int getCardValue() {return cardValue;}
+    protected void setCardValue(int v) {cardValue = v;}
+    protected void setCardSuit(String s) {
+        strSuit = s;
+        validateSuit(s);
+    }
     public String getSuit()   {return suit;}
     public boolean isFace()   {return isFace;}
     public String getStrSuit(){return strSuit;}

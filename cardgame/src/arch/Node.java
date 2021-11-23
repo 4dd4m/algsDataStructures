@@ -1,20 +1,20 @@
 package arch;
 //setting up individual nodes, which can point to another element
 public class Node<T> {
-    private T data;
+    private T cardValue;
     private Node<T> next;
 
     public Node(T dataValue) {
-        data = dataValue;
+        cardValue = dataValue;
         next = null;
     }
 
     public T getData() {
-        return data;
+        return cardValue;
     }
 
     public void setData(T dataValue) {
-        data = dataValue;
+        cardValue = dataValue;
     }
 
     public Node<T> getNext() {

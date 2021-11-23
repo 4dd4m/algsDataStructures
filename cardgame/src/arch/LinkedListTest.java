@@ -1,5 +1,4 @@
 package arch;
-import arch.*;
 
 public class LinkedListTest {
 

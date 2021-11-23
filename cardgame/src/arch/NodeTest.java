@@ -1,9 +1,6 @@
 package arch;
 import arch.*;
-
 public class NodeTest {
-
-
     public static void main(String[] args) {
         Node<Integer> node1 = new Node<Integer>(1);
         Node<Integer> node2 = new Node<Integer>(2);
@@ -31,7 +28,4 @@ public class NodeTest {
         System.out.println(node4.toString());
         System.out.println(node5.toString());
     }
-
-
-
 }
