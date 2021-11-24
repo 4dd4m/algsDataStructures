@@ -1,8 +1,8 @@
 package arch;
-import arch.*;
 public class BoardTest {
 
     public static void boardState(Board b){
+        System.out.println("-------------------------");
         System.out.println("\nCurrent Board Size: " + b.getSize());
             System.out.println("First Card: " + b.getFirstCard().toString());
             System.out.println("Last Card: " + b.getLastCard().toString());
@@ -10,20 +10,21 @@ public class BoardTest {
             System.out.println("Number of Q's: " + b.getcQ());
             System.out.println("Number of K's: " + b.getcK());
             try {
-                System.out.println("Returned ArrayLength: " + b.toArray().length);
-                System.out.println("ToString: " + b.toString());
+                System.out.println("Board Size: " + b.toArray().length);
+                System.out.println("Board: " + b);
                 System.out.println("\n");
             }catch (NullPointerException e){
                 System.out.println("The board is empty");
             }
+        System.out.println("-------------------------");
     }
     public static void state(Deck d){
         System.out.println("Current Deck Size: " + d.getSize());
         try {
             System.out.println("First Card: " + d.getFirstCard().toString());
             System.out.println("Last Card: " + d.getLastCard().toString());
-            System.out.println("Returned ArrayLength: " + d.toArray().length);
-            System.out.println("ToString: " + d.toString());
+            System.out.println("Deck Size: " + d.toArray().length);
+            System.out.println("ToString: " + d);
             System.out.println("Shuffle: false");
             System.out.println("\n");
         }catch(EmptyDeckException e){
@@ -73,7 +74,7 @@ public class BoardTest {
         ba.addNewEntry(c9);
         boardState(ba);
         try {
-            System.out.println("Remove card: " + c3.toString());
+            System.out.println("Remove card: " + c3);
             ba.removeACard(c3);
             System.out.println("Get Card Value of the first element: " + ba.getNthCardValue(1));
             System.out.println("Get Card Value of the 2 element: " + ba.getNthCardValue(2));
@@ -89,20 +90,16 @@ public class BoardTest {
         boardState(ba);
 
         try {
-            System.out.println("Remove a non-existing Card: " + new Card(10,"s").toString());
+            System.out.println("Remove a non-existing Card: " + new Card(10,"s"));
             ba.removeACard(new Card(10,"s"));
         }catch(CardNotFoundException e){
             System.out.println("Card not in the board");
         }
         boardState(ba);
-        System.out.println("Testing KJQ Existance:");
-        int[] pos = ba.getJQKPos();
-        for (int i : pos){
-            System.out.println(i);
-        }
+
 
         try {
-            System.out.println("Remove first Card: " + new Card(1,"h").toString());
+            System.out.println("Remove first Card: " + new Card(1,"h"));
             ba.removeACard(new Card(1,"h"));
         }catch(CardNotFoundException e){
             System.out.println("Card not in the board");
@@ -110,7 +107,7 @@ public class BoardTest {
         boardState(ba);
 
         try {
-            System.out.println("Remove last Card: " + new Card(9,"h").toString());
+            System.out.println("Remove last Card: " + new Card(9,"h"));
             ba.removeACard(new Card(9,"h"));
         }catch(CardNotFoundException e){
             System.out.println("Card not in the board");
@@ -164,11 +161,7 @@ public class BoardTest {
             System.out.println(ba.checkAnswer(7, 9, 0));
             System.out.println("Testing plain 11's (KJQ)");
             System.out.println(ba.checkAnswer(7, 8, 9));
-            System.out.println("Testing plain 11's (KJQ)");
-            int[] poss = ba.getJQKPos();
-            for (int i : poss){
-                System.out.println(i);
-            }
+
             //System.out.println("Testing Fail Inputs"); //uncomment to test
             //System.out.println(ba.checkAnswer(0, 0, 0));
             //System.out.println(ba.checkAnswer(1, 0, 0));
@@ -181,15 +174,54 @@ public class BoardTest {
             System.out.println(e);
         }
 
+        System.out.println("Testing possible valid moves");
+        Deck db = new Deck();
+        Board bb = new Board();
+        System.out.println("Fill up the board with the first 9 cards\n");
+        db.shuffle();
+        for (int i = 0; i <= 8; i++) {
+            bb.addNewEntry(d.removeFirstCard());
+        }
+        boardState(bb);
 
 
 
+        Board bc = new Board();
+        bc.addNewEntry(new Card(6,"c"));
+        bc.addNewEntry(new Card(5,"d"));
 
+
+        boardState(bc);
+        bc.searchValidMoves();
+        Stack st = bc.getValidMove();
+        System.out.println("Valid Moves: " + st.getSize());
+        bc.removeNthCard(1);
+        bc.removeNthCard(1);
+        bc.addNewEntry(new Card(11,"c"));
+        bc.addNewEntry(new Card(12,"d"));
+        bc.addNewEntry(new Card(13,"d"));
+        boardState(bc);
+        bc.searchValidMoves();
+        st = bc.getValidMove();
+        System.out.println("Valid Moves: " + st.getSize());
+
+
+        //[A♦  A♠  5♣  6♠  7♦  9♥  9♦  K♥  K♣]
+        Board be = new Board();
+        be.addNewEntry(new Card(1,"s"));
+        be.addNewEntry(new Card(1,"d"));
+        be.addNewEntry(new Card(5,"c"));
+        be.addNewEntry(new Card(6,"s"));
+        be.addNewEntry(new Card(7,"d"));
+        be.addNewEntry(new Card(9,"h"));
+        be.addNewEntry(new Card(9,"d"));
+        be.addNewEntry(new Card(13,"c"));
+        be.addNewEntry(new Card(13,"h"));
+       boardState(be);
+
+       be.searchValidMoves();
+       System.out.println(be.getValidMove().getSize());
 
 
     }
-
-
-
-
 }

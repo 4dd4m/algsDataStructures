@@ -59,7 +59,7 @@ public class LinkedList<T>{
         return true;
     }
 
-    public T remove() {
+    public T removeFirstCard() {
         if(firstNode != null){
             T result = firstNode.getData();
             firstNode = firstNode.getNext();
@@ -69,11 +69,13 @@ public class LinkedList<T>{
         }else return null;
     }
 
-    public boolean remove(Object anEntry) {
+    public boolean removeFirstCard(Object anEntry) {
         Node<T> nodeToRemove = findEntry((T) anEntry);
-        if(nodeToRemove == null){
+        if(nodeToRemove.getData() == null){
             return false;
         }
+        Node<T> node = firstNode;
+
         nodeToRemove.setData(firstNode.getData());
         firstNode = firstNode.getNext();
         size--;
@@ -159,8 +161,8 @@ public class LinkedList<T>{
             result += currentNode.getData();
             currentNode = currentNode.getNext();
         }
-        //if (getLastNode() != null)
-            //result += lastNode.getData();
+        if (getLastNode() != null)
+            result += lastNode.getData();
         result += "]";
         return result;
     }

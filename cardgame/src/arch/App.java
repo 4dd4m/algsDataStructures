@@ -1,8 +1,13 @@
 package arch;
-import arch.*;
+
 import java.util.Scanner;
 
 public class App {
+    Scanner scan = new Scanner(System.in);
+    private int gameState = 0; //0 running game | 1 win | -1 staleMate
+    private int cardRemoved;
+    private boolean acceptableMove = false;
+
     public static void selectMode(int pUser) {
         int user;
         System.out.println("CardGame\n-----------------");
@@ -10,32 +15,169 @@ public class App {
         if (pUser == 0) {
             Scanner scan = new Scanner(System.in);//this is for testing
             user = Integer.parseInt(scan.nextLine());
-        }else{
-             user = pUser;
+        } else {
+            user = pUser;
         }
-            if (user == 1) {
-                System.out.println("Play Mode\n");
-            } else if (user == 2) {
-                System.out.println("Demonstration Mode");
-            } else if (user == 3) {
-                System.out.println("The Rules of the Game\n");
-                showRules();
-                selectMode(0);
-            } else if (user == 4) {
-                System.out.println("Bye...");
+        if (user == 1) {
+            System.out.println("Play Mode\n");
+        } else if (user == 2) {
+            System.out.println("Demonstration Mode");
+        } else if (user == 3) {
+            System.out.println("The Rules of the Game\n");
+            showRules();
+            selectMode(0);
+        } else if (user == 4) {
+            System.out.println("Bye...");
+        }
+    }
+
+    private int selectMenu() {
+        int choice = 0;
+        return choice;
+    }
+
+    public void demonstrationMode(boolean boo) throws LockedDeckException, EmptyDeckException {
+
+        Deck d = new Deck(true, true);
+        Board b = new Board();
+        System.out.println("Dealing Your cards......");
+        for (int i = 0; i < b.BOARDSIZE; i++) {
+            b.addNewEntry(d.removeFirstCard());
+        } //DEALING THE FIRST NINE CARD
+
+        System.out.println(b.representBoard());
+        System.out.println("----------------------------------------");
+        System.out.println("Your input, where: 12 <= input => 987");
+
+        while (gameState != -1 || (d.getSize() == 0 && b.getSize() == 0)) {
+            if (gameState == -1) {
+                break;
             }
+            b.getValidMove().clear();
+            cardRemoved = 0;
+            acceptableMove = false;
+            //System.out.println("DECKSIZE: " + d.getSize());
+            //System.out.println("BOARDSIZE: " + b.getSize());
+            //System.out.println("GAMESTATE: " + gameState);
+
+            Stack v = b.getValidMove();
+            int[] choice = {0, 0, 0};
+            if (v.getSize() > 0) {
+                if (boo == true) {
+                    choice = v.peek();
+                } else {
+                    boolean proceed = false;
+                    while (proceed == false) {
+                        System.out.print("Select cards: ");
+                        String user = scan.nextLine();
+                        if (user.length() > 0 && user.length() <= 3 && !user.equals("h")) {
+                            for (int i = 0; i <= user.length() - 1; i++) {
+                                choice[i] = user.charAt(i) - 48;
+                                //System.out.println(user.charAt(i));
+                            }
+
+
+                            int[] tmpArr = choice;                         //order the user input
+                            for (int i = 0; i <= tmpArr.length; i++) {
+                                for (int j = i + 1; j < tmpArr.length; j++) {
+                                    int tmp = 0;
+                                    if (tmpArr[i] < tmpArr[j]) {
+                                        tmp = tmpArr[i];
+                                        tmpArr[i] = tmpArr[j];
+                                        tmpArr[j] = tmp;
+                                    }
+                                }
+                            }
+
+//                            choice = tmpArr;
+//                            for (int i = 0; i < choice.length; i++) {
+//                                System.out.println(choice[i]);
+//                            }
+
+                            if (b.checkAnswer(choice[0], choice[1]) == false && b.checkAnswer(choice[0], choice[1], choice[2]) == false) {
+                                System.out.println("This is not good selection");
+
+                            } else {
+                                proceed = true;
+                                break;
+                            }
+
+                        } else if (user.equals("h")) {
+                            choice = v.peek();
+                            String hint = "";
+                            for (int i = 0; i < choice.length; i++) {
+                                hint += Integer.toString(choice[i]) + "  ";
+                            }
+                            System.out.println("You can continue like this -> " + hint);
+                            System.out.println("Let me help ya, I remove it for you...");
+                            proceed = true;
+                            break;
+                        }
+                    }
+                }
+                if (choice.length == 2 || choice[2] == 0) {
+                    cardRemoved = 2;
+                    acceptableMove = b.checkAnswer(choice[0], choice[1]);
+                } else if (choice.length == 3) {
+                    cardRemoved = 3;
+                    acceptableMove = b.checkAnswer(choice[0], choice[1], choice[2]);
+                } else {
+                    gameState = -1;
+                    break;
+                }
+                //System.out.println(b.getValidMove() + "-(" + b.getValidMove().getSize() + ")");
+            } else {
+                gameState = -1;
+                System.out.println("No valid Moves");
+                break;
+            }
+
+            if (acceptableMove) {
+                int prev = 0;
+                if (b.getSize() == 2) {
+                    b.clear();
+                } else {
+                    for (int i : choice) {
+                        b.removeNthCard(i);
+                    }
+                }
+                //System.out.println("Remove the firsts pop() from the board");
+                if (b.getSize() > 0) {
+                    //System.out.println(b.representBoard());
+                }
+
+                if (d.getSize() > 0) {
+                    int toReplace = Math.min(d.getSize(), cardRemoved);
+                    //System.out.println("Replace the Cards");
+
+                    for (int i = 0; i < toReplace; i++) {
+                        b.addNewEntry(d.removeFirstCard());
+                    }
+                }
+                if (d.getSize() == 0 && b.getSize() == 0) {
+                    gameState = 1;
+                    break;
+                }
+                //System.out.println("After replacement");
+                System.out.println("-----------------");
+                System.out.println(b.representBoard());
+            }
+
+        }
+        switch (gameState) {
+            case -1:
+                System.out.println("\n\"Game over man, GAME OVER!\" - Pvt. Hudson");
+                System.out.println("Cards Left: " + d.getSize());
+                break;
+            case 1:
+                System.out.println("\nHold my beer...... YOU WON");
+        }
+        //scan.nextLine();
     }
 
+    public void playMode() {}
 
-    private int selectMenu(){
-            int choice = 0;
-            Scanner scan = new Scanner(System.in);
-            return choice;
-    }
-
-    public void demonstrationMode(){}
-    public void playMode(){}
-    public static void showRules(){
+    public static void showRules() {
         System.out.println("Elevens is extremely similar to Bowling Solitaire,\n" +
                 "except that the layout is a little different and\n" +
                 "the goal is to make matching pairs that add up to\n" +
@@ -85,11 +227,12 @@ public class App {
     }
 
     public static void main(String[] args) {
-    App a = new App();
-    try{
-        a.selectMode(0);
-        }catch(NumberFormatException e){
-        System.out.println("Invalid Output! Let's try that again");
+        App a = new App();
+
+        try {
+            a.selectMode(0);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid Output! Let's try that again");
             selectMode(0);
         }
     }
