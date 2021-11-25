@@ -13,22 +13,22 @@ public class LinkedList<T>{
 
     public Node<T> getFirstNode() {
         return firstNode;
-    }
+    }               //return first node
 
     public Node<T> getLastNode() {
         return lastNode;
-    }
+    }                 //return last node
 
     public int getSize() {
         return size;
-    }
+    }                             //get size
 
 
     public boolean isEmpty() {
         return size == 0;
-    }
+    }                    //is empty
 
-    protected void setLastNode(){
+    protected void updateLastElement(){
         //this method updates the last node, which is required if we remove exactly the last element from the list
         if (getSize() == 0){
             lastNode = null;
@@ -49,7 +49,7 @@ public class LinkedList<T>{
         }
     }
 
-    protected void setLastNode(String newEntry){
+    protected void updateLastElement(String newEntry){
         //this method updates the last node, which is required if we remove exactly the last element from the list
             lastNode = new Node<T>((T) newEntry);
             lastNode.setNext(null);
@@ -57,7 +57,7 @@ public class LinkedList<T>{
 
     }
 
-    public boolean addNewEntry(Object newEntry) {
+    public boolean addNewEntry(Object newEntry) {               //add new element to the data structure
         Node<T> newNode = new Node<T>((T) newEntry);
         newNode.setNext(firstNode);
         firstNode = newNode;
@@ -67,17 +67,17 @@ public class LinkedList<T>{
         return true;
     }
 
-    public T removeFirstCard() {
+    public T removeFirstElement() {                             //remove the first element without getting the object
         if(firstNode != null){
             T result = firstNode.getData();
             firstNode = firstNode.getNext();
             size--;
-            setLastNode();
+            updateLastElement();
             return result;
         }else return null;
     }
 
-    public boolean removeFirstCard(Object anEntry) {
+    public boolean removeFirstElement(Object anEntry) {         //remove first, return with first
         Node<T> nodeToRemove = findEntry((T) anEntry);
         if(nodeToRemove.getData() == null){
             return false;
@@ -90,41 +90,13 @@ public class LinkedList<T>{
         return true;
     }
 
-    public void clear() {
+    public void clear() {                                      //clear everything
         firstNode.setNext(null);
         lastNode.setNext(null);
         size = 0;
     }
 
-    public int getFrequencyOf(Object anEntry) {
-        int count = 0;
-        Node<T> currentNode = firstNode;
-
-        while (currentNode != null) {
-            if (currentNode.getData().equals(anEntry)) {
-                count++;
-                //currentNode.setNext(currentNode.getNext());
-                currentNode = currentNode.getNext();
-            }
-        }
-        return count;
-    }
-
-    public boolean contains(Object anEntry) {
-        Node<T> currentNode = firstNode;
-        boolean found = false;
-
-        while (!found && currentNode != null) {
-            if (currentNode.getData().equals(anEntry)) {
-                currentNode = currentNode.getNext();
-                found = true;
-                break;
-            }
-        }
-        return found;
-    }
-
-    protected Node<T> findEntry(T nodeToFind){
+    protected Node<T> findEntry(T nodeToFind){                 //find a given entry
         Node<T> currentNode = firstNode;
         boolean found = false;
 
@@ -142,7 +114,7 @@ public class LinkedList<T>{
         return null;
     }
 
-    public T[] toArray() throws EmptyDeckException{
+    public T[] toArray() throws EmptyDeckException{             //representation in array
         T[] resultArray = (T[]) new Object[size];
 
         if (isEmpty() == true)
@@ -159,7 +131,7 @@ public class LinkedList<T>{
         return resultArray;
     }
 
-    public String toString(){
+    public String toString(){                                    //string representation
         if (isEmpty() == true) {
             return "[]";
         }

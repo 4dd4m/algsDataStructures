@@ -9,23 +9,23 @@ public class Node<T> {
         next = null;
     }
 
-    public T getData() {
+    public T getData() {                                //get the value of the node
         return cardValue;
     }
 
     public void setData(T dataValue) {
         cardValue = dataValue;
-    }
+    }       //set the node data
 
     public Node<T> getNext() {
         return next;
-    }
+    }                         //get the next node
 
     public void setNext(Node<T> nextNode) {
         next = nextNode;
-    }
+    }        //set the next node
 
-    public String toString(){
+    public String toString(){                                         //string repr
         if (getData() != null) {
             return "Data:\t" + getData()+ "\t->\t" + getNext();
         }else{

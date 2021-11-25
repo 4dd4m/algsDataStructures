@@ -1,6 +1,6 @@
 package arch;
 
-public class Stack<T> {
+public class Stack<T> implements StackInterface{
     protected Node<T> firstNode;
     protected Node<T> lastNode;
     protected int[] data;
@@ -62,10 +62,6 @@ public class Stack<T> {
             }
         }
 
-        public Node getLastNode () {
-            return lastNode;
-        }
-
         public String toString () {
             if (isEmpty()) {
                 return "[]";
@@ -87,7 +83,5 @@ public class Stack<T> {
             result += "]";
             return result;
         }
-
-
     }
 

@@ -42,14 +42,14 @@ public class LinkedListTest {
         myList.addNewEntry("2");
         state(myList);
             System.out.println("\n\nRemoving The First Element (2):");
-            myList.removeFirstCard();
+            myList.removeFirstElement();
             state(myList);
             System.out.println("\n\nRemoving an element in the middle (T):");
-            myList.removeFirstCard("T");
+            myList.removeFirstElement("T");
             state(myList);
             System.out.println("\n\nRemoving the last element (A):");
             System.out.println("\n\nThe first element swaps slip to the deleted posish");
-            myList.removeFirstCard("A");
+            myList.removeFirstElement("A");
             state(myList);
             System.out.println("\n\nEmpty the list:");
             myList.clear();

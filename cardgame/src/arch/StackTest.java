@@ -10,7 +10,7 @@ public class StackTest {
         int[] p3 = {2, 9, 0};
         int[] p4 = {1, 0, 1};
 
-        System.out.println("Pushing {3, 6, 9}");
+        System.out.println("Pushing {3, 6, 9}  - order is always descending in a stack element");
         s.push(p1);
         System.out.println(s);
         System.out.println("Size of the stack is: " + s.getSize());

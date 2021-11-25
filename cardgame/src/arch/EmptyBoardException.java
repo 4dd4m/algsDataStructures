@@ -1,7 +1,7 @@
 package arch;
 
 public class EmptyBoardException extends Exception{
-    public  EmptyBoardException(replayItem c) {
+    public  EmptyBoardException(Card c) {
         super(c.toString());
     }
 }

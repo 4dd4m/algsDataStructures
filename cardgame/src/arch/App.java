@@ -7,74 +7,71 @@ public class App {
     private int gameState = 0; //0 running game | 1 win | -1 staleMate
     private Replay replay = new Replay();
 
-    public static void selectMode(int pUser) {
+
+    public App() throws LockedDeckException, EmptyDeckException {}
+
+    public void selectMode() throws LockedDeckException, EmptyDeckException { //select and run the mode
         int user;
+
         System.out.println("CardGame\n-----------------");
         System.out.println("1. Play\n2. Demonstration Mode\n3. Rules\n4. Exit");
-        if (pUser == 0) {
-            Scanner scan = new Scanner(System.in);//this is for testing
-            user = Integer.parseInt(scan.nextLine());
-        } else {
-            user = pUser;
-        }
-        if (user == 1) {
-            System.out.println("Play Mode\n");
-        } else if (user == 2) {
-            System.out.println("Demonstration Mode");
-        } else if (user == 3) {
-            System.out.println("The Rules of the Game\n");
-            showRules();
-            selectMode(0);
-        } else if (user == 4) {
-            System.out.println("Bye...");
-        }
-    }
-    private int selectMenu() {
-        int choice = 0;
-        return choice;
-    }
+        Scanner scan = new Scanner(System.in);//this is for testing
+        user = Integer.parseInt(scan.nextLine());
 
-    public void playMode(boolean boo) throws LockedDeckException, EmptyDeckException {
-
-        Deck d = new Deck(true, true);
-        Board b = new Board();
-        System.out.println("Dealing Your cards......");
-
-        for (int i = 0; i < b.BOARDSIZE; i++) {
-            b.addNewEntry(d.removeFirstCard());
-        } //DEALING THE FIRST NINE CARD
-
-        System.out.println(b.representBoard());
-        String initialBoard = b.toString();
-        System.out.println("----------------------------------------");
-        System.out.println("Your input, where: 12 <= input => 987");
-
-        while (gameState != -1 || (d.getSize() == 0 && b.getSize() == 0)) {
-            if (gameState == -1) {
-                break;
+        while (user != 4) {                                                 //until we get a valid choice
+            if (user == 1) {                                                //call the corresponding mode
+                System.out.println("Play Mode\n");
+                playMode(false);
+            } else if (user == 2) {
+                System.out.println("Demonstration Mode");
+                playMode(true);
+            } else if (user == 3) {
+                System.out.println("The Rules of the Game\n");
+                showRules();
+            } else if (user == 4) {
+                System.out.println("Bye...");
             }
-            b.getValidMove().clear();
+        }
+    }
+
+    public void playMode(boolean boo) throws LockedDeckException, EmptyDeckException {  //main game
+        System.out.println("Dealing Your cards......");
+        Deck d = new Deck(true, true);                                      //get a new deck and board
+        Board b = new Board();
+
+        for (int i = 0; i < b.BOARDSIZE; i++) {                                     //deal the BOARDSIZE amount of cards
+            b.addNewEntry(d.removeFirstElement());
+        }
+        System.out.println(b.representBoard());                                     //print out the board
+        System.out.println("----------------------------------------");
+        String initBoard = "Initial board: " + b.toString();                  //record the board initial state to replay
+        ReplayItem r = new ReplayItem(initBoard);
+        replay.push(r);
+
+        while (gameState != -1 || (d.getSize() == 0 && b.getSize() == 0)) { //until no valid moves or (deck and board
+            if (gameState == -1) {                                          //gets empty
+                break;                                                      //break out
+            }
+            b.getValidMove().clear();                                       //clear the valid moves stack
             int cardRemoved = 0;
             boolean acceptableMove = false;
 
-            Stack v = b.getValidMove();
-            int[] choice = {0, 0, 0};
-            if (v.getSize() > 0) {
-                if (boo == true) {
+            Stack v = b.getValidMove();                                     //get all valid moves
+            int[] choice = {0, 0, 0};                                       //init
+            if (v.getSize() > 0) {                                          //if the valid stack has moves
+                if (boo == true) {                                        //the machine will auto peek to learn a posish
                     choice = v.peek();
-                } else {
-                    boolean proceed = false;
+                } else {                                                  //USER MODE
+                    boolean proceed = false;                              //user interface, hint, validate
                     while (proceed == false) {
-                        System.out.print("Select cards: ");
+                        System.out.print("[" + d.getSize() + "]]]]\tPlease Select Card: ");
                         String user = scan.nextLine();
                         if (user.length() > 0 && user.length() <= 3 && !user.equals("h")) {
                             for (int i = 0; i <= user.length() - 1; i++) {
                                 choice[i] = user.charAt(i) - 48;
                                 //System.out.println(user.charAt(i));
                             }
-
-
-                            int[] tmpArr = choice;                         //order the user input
+                            int[] tmpArr = choice;                         //order the users input
                             for (int i = 0; i <= tmpArr.length; i++) {
                                 for (int j = i + 1; j < tmpArr.length; j++) {
                                     int tmp = 0;
@@ -85,17 +82,14 @@ public class App {
                                     }
                                 }
                             }
-
-                            if (!b.checkAnswer(choice[0], choice[1]) &&
+                            if (!b.checkAnswer(choice[0], choice[1]) &&      //validate their selection
                                     b.checkAnswer(choice[0], choice[1], choice[2]) == false) {
                                 System.out.println("This is not good selection");
-
-                            } else {
+                            } else {                                        //invalid input will stop and ask again
                                 proceed = true;
                                 break;
                             }
-
-                        } else if (user.equals("h")) {
+                        } else if (user.equals("h")) {                      //activate hint & auto remove
                             choice = v.peek();
                             String hint = "";
                             for (int i = 0; i < choice.length; i++) {
@@ -108,94 +102,89 @@ public class App {
                         }
                     }
                 }
-                if (choice.length == 2 || choice[2] == 0) {
-                    cardRemoved = 2;
+                if (choice.length == 2 || choice[2] == 0) {                //extra security, validating the move on
+                    cardRemoved = 2;                                       //the board as well | input nn0
                     acceptableMove = b.checkAnswer(choice[0], choice[1]);
-                } else if (choice.length == 3) {
+                } else if (choice.length == 3) {                           //testing input nnn
                     cardRemoved = 3;
                     acceptableMove = b.checkAnswer(choice[0], choice[1], choice[2]);
-
                 } else {
                     gameState = -1;
                     break;
                 }
-                //System.out.println(b.getValidMove() + "-(" + b.getValidMove().getSize() + ")");
-            } else {
+
+            } else {                                                      //no valid moves in the stack so stalemate
                 gameState = -1;
                 System.out.println("No valid Moves");
                 break;
             }
-
-            if (acceptableMove) {
+            if (acceptableMove) {                                         //if the users move is acceptable
                 String choosen = "";
-                choosen += b.getNthCard(choice[0]).toString() + "  ";
+                choosen += b.getNthCard(choice[0]).toString() + "  ";       //prepare the input for replay
                 choosen += b.getNthCard(choice[1]).toString() + "  ";
-                if (choice.length == 3) {
+                if (choice.length == 3 && choice[2] != 0) {
                     choosen += b.getNthCard(choice[2]).toString() + "  ";
                 }
-                if (b.getSize() > 0) {
+                System.out.println("Removed Cards:\t" + choosen);           //reprint the selection
+
+                if (b.getSize() > 0) {                                      //solve the KJQ tab issue
                     if (choice.length == 3) {
                         choosen += "\tafter-->\t" + b.toString();
                     } else {
                         choosen += "\t\tafter-->\t" + b.toString();
                     }
-
                 }
-                //System.out.println(choosen);
-                ReplayItem r = new ReplayItem(choosen);
-                r.setData(choosen);
-                replay.addNewReplay(r);
 
-                if (b.getSize() == 2) {
-                    b.clear();
-                } else {
+                ReplayItem rinit = new ReplayItem(choosen);                 //push the selection to the stack
+                replay.push(rinit);
+
+                if (b.getSize() == 2) {                                     //artificial board clear when two cards left
+                    b.clear();                                              //anytime it happens, that is a won scen.
+                } else {                                                    //to avoid mess up with the replay
                     for (int i : choice) {
                         b.removeNthCard(i);
                     }
                 }
-
-                if (d.getSize() > 0) {
+                if (d.getSize() > 0) {                                      //if deck has 2 card we can't remove 3
                     int toReplace = Math.min(d.getSize(), cardRemoved);
 
-                    for (int i = 0; i < toReplace; i++) {
-                        b.addNewEntry(d.removeFirstCard());
+                    for (int i = 0; i < toReplace; i++) {                   //replace the cards
+                        b.addNewEntry(d.removeFirstElement());
                     }
                 }
-                if (d.getSize() == 0 && b.getSize() == 0) {
+                if (d.getSize() == 0 && b.getSize() == 0) {                 //no deck, no board means a win
                     gameState = 1;
                     break;
                 }
                 System.out.println("-----------------");
-                System.out.println(b.representBoard());
-
+                System.out.println(b.representBoard());                     //display the empty board
             }
-
         }
-        switch (gameState) {
-            case -1:
+        switch (gameState) {                                                //things relating to the game state
+            case -1:                                                        //the game is over
                 System.out.println("\n\"Game over man, GAME OVER!\" - Pvt. Hudson");
-                System.out.println("Cards Left: " + d.getSize());
-
+                System.out.println("Cards Left: " + d.getSize());           //deck size
                 break;
             case 1:
-                System.out.println("\nHold my beer...... YOU WON\n\n");
-                b = new Board();
-
+                System.out.println("\nHold my beer...... YOU WON\n\n");     //win
+                b = new Board();                                            //create a new board to proper cleanup
         }
-        //scan.nextLine();
-        System.out.println("\nWould you like to see the replay? (y/n)");
+        System.out.println("\nWould you like to see the replay? (y/n) - (q) quit"); //handling replay and quit
         String choice = scan.next();
-        if (choice.equals("y") || choice.equals("Y")) {
-            String finalBoard = "Final Board:\t" + b.toString() + "\n";
-            replay.addNewReplay(new ReplayItem(finalBoard));
+        if (choice.equals("y") || choice.equals("Y")) {                             //render replay
+            String finalBoard = "Final Board:\t" + b.toString();
+
             System.out.println("Action Replay!");
             System.out.println("Replay Size: " + replay.size);
-            System.out.println(replay.toString());
-            //System.out.println(replay.removeFirstCard());
+            replay.push(new ReplayItem(finalBoard));
+            replay.printHistory();
+        } else if (choice.equals("q") || choice.equals("Q")                         //quit
+                || choice.equals("n") || choice.equals("N")) {
+            System.exit(0);
         }
     }
 
-    public static void showRules() {
+    public static void showRules() {                                                //nice touch!
         System.out.println("Elevens is extremely similar to Bowling Solitaire,\n" +
                 "except that the layout is a little different and\n" +
                 "the goal is to make matching pairs that add up to\n" +
@@ -244,14 +233,17 @@ public class App {
                 "make into a family-friendly or party game.");
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws LockedDeckException, EmptyDeckException {
         App a = new App();
-
         try {
-            a.selectMode(0);
+            a.selectMode();
         } catch (NumberFormatException e) {
             System.out.println("Invalid Output! Let's try that again");
-            selectMode(0);
+            a.selectMode();
+        } catch (LockedDeckException e) {
+            e.printStackTrace();
+        } catch (EmptyDeckException e) {
+            e.printStackTrace();
         }
     }
 }

@@ -1,7 +1,7 @@
 package arch;
 
 public class CardNotFoundException extends Exception{
-    public  CardNotFoundException(replayItem c) {
+    public  CardNotFoundException(Card c) {
         super(c.toString());
     }
 }

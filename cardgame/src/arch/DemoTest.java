@@ -1,6 +1,6 @@
 package arch;
 
-public class ApTest {
+public class DemoTest {
 
     public static void testTemodnstrationMode() throws LockedDeckException, EmptyDeckException {
         App app = new App();
