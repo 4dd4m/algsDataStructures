@@ -54,15 +54,15 @@ public class BoardTest {
 
         Board ba = new Board();
 
-        Card c1 = new Card(1,"h");
-        Card c2 = new Card(2,"h");
-        Card c3 = new Card(3,"h");
-        Card c4 = new Card(4,"h");
-        Card c5 = new Card(5,"h");
-        Card c6 = new Card(6,"h");
-        Card c7 = new Card(7,"h");
-        Card c8 = new Card(8,"h");
-        Card c9 = new Card(9,"h");
+        replayItem c1 = new replayItem(1,"h");
+        replayItem c2 = new replayItem(2,"h");
+        replayItem c3 = new replayItem(3,"h");
+        replayItem c4 = new replayItem(4,"h");
+        replayItem c5 = new replayItem(5,"h");
+        replayItem c6 = new replayItem(6,"h");
+        replayItem c7 = new replayItem(7,"h");
+        replayItem c8 = new replayItem(8,"h");
+        replayItem c9 = new replayItem(9,"h");
         ba.addNewEntry(c1);
         ba.addNewEntry(c2);
         ba.addNewEntry(c3);
@@ -90,8 +90,8 @@ public class BoardTest {
         boardState(ba);
 
         try {
-            System.out.println("Remove a non-existing Card: " + new Card(10,"s"));
-            ba.removeACard(new Card(10,"s"));
+            System.out.println("Remove a non-existing Card: " + new replayItem(10,"s"));
+            ba.removeACard(new replayItem(10,"s"));
         }catch(CardNotFoundException e){
             System.out.println("Card not in the board");
         }
@@ -99,16 +99,16 @@ public class BoardTest {
 
 
         try {
-            System.out.println("Remove first Card: " + new Card(1,"h"));
-            ba.removeACard(new Card(1,"h"));
+            System.out.println("Remove first Card: " + new replayItem(1,"h"));
+            ba.removeACard(new replayItem(1,"h"));
         }catch(CardNotFoundException e){
             System.out.println("Card not in the board");
         }
         boardState(ba);
 
         try {
-            System.out.println("Remove last Card: " + new Card(9,"h"));
-            ba.removeACard(new Card(9,"h"));
+            System.out.println("Remove last Card: " + new replayItem(9,"h"));
+            ba.removeACard(new replayItem(9,"h"));
         }catch(CardNotFoundException e){
             System.out.println("Card not in the board");
         }
@@ -138,9 +138,9 @@ public class BoardTest {
         }
         boardState(ba);
         ba.clear();
-        Card c10 = new Card(11,"h");
-        Card c11 = new Card(12,"c");
-        Card c12 = new Card(13,"s");
+        replayItem c10 = new replayItem(11,"h");
+        replayItem c11 = new replayItem(12,"c");
+        replayItem c12 = new replayItem(13,"s");
         ba.addNewEntry(c1);
         ba.addNewEntry(c2);
         ba.addNewEntry(c3);
@@ -187,8 +187,8 @@ public class BoardTest {
 
 
         Board bc = new Board();
-        bc.addNewEntry(new Card(6,"c"));
-        bc.addNewEntry(new Card(5,"d"));
+        bc.addNewEntry(new replayItem(6,"c"));
+        bc.addNewEntry(new replayItem(5,"d"));
 
 
         boardState(bc);
@@ -197,9 +197,9 @@ public class BoardTest {
         System.out.println("Valid Moves: " + st.getSize());
         bc.removeNthCard(1);
         bc.removeNthCard(1);
-        bc.addNewEntry(new Card(11,"c"));
-        bc.addNewEntry(new Card(12,"d"));
-        bc.addNewEntry(new Card(13,"d"));
+        bc.addNewEntry(new replayItem(11,"c"));
+        bc.addNewEntry(new replayItem(12,"d"));
+        bc.addNewEntry(new replayItem(13,"d"));
         boardState(bc);
         bc.searchValidMoves();
         st = bc.getValidMove();
@@ -208,15 +208,15 @@ public class BoardTest {
 
         //[A♦  A♠  5♣  6♠  7♦  9♥  9♦  K♥  K♣]
         Board be = new Board();
-        be.addNewEntry(new Card(1,"s"));
-        be.addNewEntry(new Card(1,"d"));
-        be.addNewEntry(new Card(5,"c"));
-        be.addNewEntry(new Card(6,"s"));
-        be.addNewEntry(new Card(7,"d"));
-        be.addNewEntry(new Card(9,"h"));
-        be.addNewEntry(new Card(9,"d"));
-        be.addNewEntry(new Card(13,"c"));
-        be.addNewEntry(new Card(13,"h"));
+        be.addNewEntry(new replayItem(1,"s"));
+        be.addNewEntry(new replayItem(1,"d"));
+        be.addNewEntry(new replayItem(5,"c"));
+        be.addNewEntry(new replayItem(6,"s"));
+        be.addNewEntry(new replayItem(7,"d"));
+        be.addNewEntry(new replayItem(9,"h"));
+        be.addNewEntry(new replayItem(9,"d"));
+        be.addNewEntry(new replayItem(13,"c"));
+        be.addNewEntry(new replayItem(13,"h"));
        boardState(be);
 
        be.searchValidMoves();

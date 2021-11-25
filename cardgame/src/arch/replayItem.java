@@ -1,11 +1,11 @@
 package arch;
 
-public class Card extends Node{
+public class replayItem extends Node{
     private String  suit, strSuit;
     private boolean isFace;
     private int     cardValue;
 
-    public Card(int pValue, String pSuit) {
+    public replayItem(int pValue, String pSuit) {
         super(pValue);
         cardValue = validateValue(pValue);
         setIsFaceCard();

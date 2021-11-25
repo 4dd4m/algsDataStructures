@@ -1,7 +1,5 @@
 package arch;
 
-import java.util.concurrent.locks.Lock;
-
 public class DeckTest {
     public static void state(Deck d) {
         System.out.println("Current Deck Size: " + d.getSize());
@@ -57,19 +55,19 @@ public class DeckTest {
             d.removeFirstCard();
             d.removeFirstCard();
             state(d);
-            Card c = new Card(7, "s");
+            replayItem c = new replayItem(7, "s");
             System.out.println("Removing: " + c + "(connected two card [->][][<-] the first element doesnt change)\n-------------");
             d.removeFirstCard(c);
             state(d);
-            Card c2 = new Card(12, "c");
+            replayItem c2 = new replayItem(12, "c");
             System.out.println("Removing first card: " + c2 + "\n-------------");
             d.removeFirstCard(c2);
             state(d);
-            Card c3 = new Card(1, "h");
+            replayItem c3 = new replayItem(1, "h");
             System.out.println("Removing last card: " + c3 + "\n-------------");
             d.removeFirstCard(c3);
             state(d);
-            Card c4 = new Card(1, "d");
+            replayItem c4 = new replayItem(1, "d");
             System.out.println("Removing last card: " + c4 + "\n-------------");
             d.removeFirstCard(c4);
             state(d);
@@ -82,7 +80,7 @@ public class DeckTest {
             emptyDeck.addNewEntry(c3);
             emptyDeck.addNewEntry(c4);
             state(emptyDeck);
-            Card c5 = new Card(12, "h");
+            replayItem c5 = new replayItem(12, "h");
             System.out.println("Remove a non-existing card from the deck: " + c5 + "\n-------------");
             emptyDeck.removeFirstCard(c5);
             state(emptyDeck);

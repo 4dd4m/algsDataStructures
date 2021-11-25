@@ -6,7 +6,7 @@ public class ApTest {
         App app = new App();
         Deck d = new Deck(true,true);
         Board b = new Board();
-        app.demonstrationMode(false);
+        app.playMode(true);
     }
 
     public static void main(String[] args) throws LockedDeckException, EmptyDeckException {

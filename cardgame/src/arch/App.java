@@ -5,8 +5,7 @@ import java.util.Scanner;
 public class App {
     Scanner scan = new Scanner(System.in);
     private int gameState = 0; //0 running game | 1 win | -1 staleMate
-    private int cardRemoved;
-    private boolean acceptableMove = false;
+    private Replay replay = new Replay();
 
     public static void selectMode(int pUser) {
         int user;
@@ -30,22 +29,23 @@ public class App {
             System.out.println("Bye...");
         }
     }
-
     private int selectMenu() {
         int choice = 0;
         return choice;
     }
 
-    public void demonstrationMode(boolean boo) throws LockedDeckException, EmptyDeckException {
+    public void playMode(boolean boo) throws LockedDeckException, EmptyDeckException {
 
         Deck d = new Deck(true, true);
         Board b = new Board();
         System.out.println("Dealing Your cards......");
+
         for (int i = 0; i < b.BOARDSIZE; i++) {
             b.addNewEntry(d.removeFirstCard());
         } //DEALING THE FIRST NINE CARD
 
         System.out.println(b.representBoard());
+        String initialBoard = b.toString();
         System.out.println("----------------------------------------");
         System.out.println("Your input, where: 12 <= input => 987");
 
@@ -54,11 +54,8 @@ public class App {
                 break;
             }
             b.getValidMove().clear();
-            cardRemoved = 0;
-            acceptableMove = false;
-            //System.out.println("DECKSIZE: " + d.getSize());
-            //System.out.println("BOARDSIZE: " + b.getSize());
-            //System.out.println("GAMESTATE: " + gameState);
+            int cardRemoved = 0;
+            boolean acceptableMove = false;
 
             Stack v = b.getValidMove();
             int[] choice = {0, 0, 0};
@@ -89,12 +86,8 @@ public class App {
                                 }
                             }
 
-//                            choice = tmpArr;
-//                            for (int i = 0; i < choice.length; i++) {
-//                                System.out.println(choice[i]);
-//                            }
-
-                            if (b.checkAnswer(choice[0], choice[1]) == false && b.checkAnswer(choice[0], choice[1], choice[2]) == false) {
+                            if (!b.checkAnswer(choice[0], choice[1]) &&
+                                    b.checkAnswer(choice[0], choice[1], choice[2]) == false) {
                                 System.out.println("This is not good selection");
 
                             } else {
@@ -121,6 +114,7 @@ public class App {
                 } else if (choice.length == 3) {
                     cardRemoved = 3;
                     acceptableMove = b.checkAnswer(choice[0], choice[1], choice[2]);
+
                 } else {
                     gameState = -1;
                     break;
@@ -133,7 +127,25 @@ public class App {
             }
 
             if (acceptableMove) {
-                int prev = 0;
+                String choosen = "";
+                choosen += b.getNthCard(choice[0]).toString() + "  ";
+                choosen += b.getNthCard(choice[1]).toString() + "  ";
+                if (choice.length == 3) {
+                    choosen += b.getNthCard(choice[2]).toString() + "  ";
+                }
+                if (b.getSize() > 0) {
+                    if (choice.length == 3) {
+                        choosen += "\tafter-->\t" + b.toString();
+                    } else {
+                        choosen += "\t\tafter-->\t" + b.toString();
+                    }
+
+                }
+                //System.out.println(choosen);
+                ReplayItem r = new ReplayItem(choosen);
+                r.setData(choosen);
+                replay.addNewReplay(r);
+
                 if (b.getSize() == 2) {
                     b.clear();
                 } else {
@@ -141,14 +153,9 @@ public class App {
                         b.removeNthCard(i);
                     }
                 }
-                //System.out.println("Remove the firsts pop() from the board");
-                if (b.getSize() > 0) {
-                    //System.out.println(b.representBoard());
-                }
 
                 if (d.getSize() > 0) {
                     int toReplace = Math.min(d.getSize(), cardRemoved);
-                    //System.out.println("Replace the Cards");
 
                     for (int i = 0; i < toReplace; i++) {
                         b.addNewEntry(d.removeFirstCard());
@@ -158,9 +165,9 @@ public class App {
                     gameState = 1;
                     break;
                 }
-                //System.out.println("After replacement");
                 System.out.println("-----------------");
                 System.out.println(b.representBoard());
+
             }
 
         }
@@ -168,14 +175,25 @@ public class App {
             case -1:
                 System.out.println("\n\"Game over man, GAME OVER!\" - Pvt. Hudson");
                 System.out.println("Cards Left: " + d.getSize());
+
                 break;
             case 1:
-                System.out.println("\nHold my beer...... YOU WON");
+                System.out.println("\nHold my beer...... YOU WON\n\n");
+                b = new Board();
+
         }
         //scan.nextLine();
+        System.out.println("\nWould you like to see the replay? (y/n)");
+        String choice = scan.next();
+        if (choice.equals("y") || choice.equals("Y")) {
+            String finalBoard = "Final Board:\t" + b.toString() + "\n";
+            replay.addNewReplay(new ReplayItem(finalBoard));
+            System.out.println("Action Replay!");
+            System.out.println("Replay Size: " + replay.size);
+            System.out.println(replay.toString());
+            //System.out.println(replay.removeFirstCard());
+        }
     }
-
-    public void playMode() {}
 
     public static void showRules() {
         System.out.println("Elevens is extremely similar to Bowling Solitaire,\n" +

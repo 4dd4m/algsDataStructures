@@ -49,6 +49,14 @@ public class LinkedList<T>{
         }
     }
 
+    protected void setLastNode(String newEntry){
+        //this method updates the last node, which is required if we remove exactly the last element from the list
+            lastNode = new Node<T>((T) newEntry);
+            lastNode.setNext(null);
+            size++;
+
+    }
+
     public boolean addNewEntry(Object newEntry) {
         Node<T> newNode = new Node<T>((T) newEntry);
         newNode.setNext(firstNode);

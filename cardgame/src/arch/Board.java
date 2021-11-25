@@ -1,6 +1,6 @@
 package arch;
-public class Board<Node> extends LinkedList<Card> {
-    private Card firstCard, lastCard;
+public class Board<Node> extends LinkedList<replayItem> {
+    private replayItem firstCard, lastCard;
     private Stack validMove = new Stack();
     int cJ = 0, cQ = 0, cK = 0;
     public final int BOARDSIZE = 9;
@@ -13,8 +13,8 @@ public class Board<Node> extends LinkedList<Card> {
         firstCard = null;
         lastCard = null;
     }
-    public boolean addNewEntry(Card newEntry) {                 //add a new card to the board
-        Card newCard = newEntry;
+    public boolean addNewEntry(replayItem newEntry) {                 //add a new card to the board
+        replayItem newCard = newEntry;
         newCard.setNext(firstCard);
         firstCard = newCard;
         size++;
@@ -40,9 +40,9 @@ public class Board<Node> extends LinkedList<Card> {
     public void sort() {                                         //bubble sort the board
         if (size > 2) {
             for (int i = 0; i < size - 1; i++) {
-                Card currentCard = firstCard;
-                Card nextCard = (Card) firstCard.getNext();
-                Card prevCard = null;
+                replayItem currentCard = firstCard;
+                replayItem nextCard = (replayItem) firstCard.getNext();
+                replayItem prevCard = null;
                 for (int j = 1; j < size; j++) {
                     if (j == 1) {
                         prevCard = firstCard;
@@ -59,15 +59,15 @@ public class Board<Node> extends LinkedList<Card> {
 
                     prevCard = currentCard;                                    //slipping the prevCard
                     currentCard = nextCard;                                    //slipping the current and nexCards
-                    nextCard = (Card) nextCard.getNext();
+                    nextCard = (replayItem) nextCard.getNext();
 
                 }
             }
         }
     }
-    public int getCardPosition(Card c) {
+    public int getCardPosition(replayItem c) {
         int i = 1;
-        Card currentCard = firstCard;
+        replayItem currentCard = firstCard;
         while (currentCard.getNext() != null) {
 
             if (currentCard.getCardValue() == c.getCardValue() &&
@@ -80,7 +80,7 @@ public class Board<Node> extends LinkedList<Card> {
                 return i;
             }
 
-            currentCard = (Card) currentCard.getNext();
+            currentCard = (replayItem) currentCard.getNext();
             i++;
         }
         if (lastCard.getCardValue() == c.getCardValue() &&
@@ -89,29 +89,32 @@ public class Board<Node> extends LinkedList<Card> {
         }
         return -1;
     }
-    public Card[] toArray() throws NullPointerException {      //array representation of the board
-        Card[] cardArray = new Card[size];                   //full size array
-        Card[] emptyArray = new Card[0];                      //empty array for return
+    public replayItem[] toArray() throws NullPointerException {      //array representation of the board
+        replayItem[] cardArray = new replayItem[size];                   //full size array
+        replayItem[] emptyArray = new replayItem[0];                      //empty array for return
 
         if (isEmpty() == true)
             throw new NullPointerException("Board is empty");
 
         int counter = 0;                                      //build the result array
-        Card currentCard = firstCard;
+        replayItem currentCard = firstCard;
         while (currentCard.getNext() != null) {
             cardArray[counter] = currentCard;
-            currentCard = (Card) currentCard.getNext();
+            currentCard = (replayItem) currentCard.getNext();
             counter++;
         }
         //cardArray[size-1] = (Card) getLastCard();           //grab the last element
         return cardArray;
     }
     public String toString() throws NullPointerException {     //string representation of the array [Q♠][Q♦][Q♥]
-        Card currentCard = firstCard;
+        if (size == 0){
+            return "[]";
+        }
+        replayItem currentCard = firstCard;
         String result = "[";
         while (currentCard.getNext() != null) {               //fill the array
             result += currentCard + "  ";
-            currentCard = (Card) currentCard.getNext();
+            currentCard = (replayItem) currentCard.getNext();
         }
         if (getLastCard() != null) {
             result += currentCard.toString();                 //grab the last card
@@ -135,12 +138,12 @@ public class Board<Node> extends LinkedList<Card> {
         }
         return s + choice;
     }
-    public Card getFirstCard() throws NullPointerException {   //grab the first card
+    public replayItem getFirstCard() throws NullPointerException {   //grab the first card
         if (firstCard == null)
             throw new NullPointerException("None shall pass.");
         return firstCard;
     }
-    public Card getLastCard() throws NullPointerException {   //grab the last card
+    public replayItem getLastCard() throws NullPointerException {   //grab the last card
         if (firstCard == null)
             throw new NullPointerException("The Deck is Empty");
         return lastCard;
@@ -206,15 +209,15 @@ public class Board<Node> extends LinkedList<Card> {
             }
 
 
-        Card outerCard = firstCard;
+        replayItem outerCard = firstCard;
         int outer = 1;
         while (outerCard.getNext() != null) {
-            Card innerCard = (Card) firstCard.getNext();
-            Card offsetCard = innerCard;
+            replayItem innerCard = (replayItem) firstCard.getNext();
+            replayItem offsetCard = innerCard;
             int inner = getSize() - outer + 1;
             while (innerCard.getNext() != null) {
 
-                innerCard = (Card) innerCard.getNext();
+                innerCard = (replayItem) innerCard.getNext();
                 //System.out.println("i: " +innerCard+" | o: " +outerCard + "offset: " + offsetCard);
                 if ((outerCard.getCardValue() + innerCard.getCardValue() == 11)) {
                     int inner2 = size - outer;
@@ -227,8 +230,8 @@ public class Board<Node> extends LinkedList<Card> {
 
                 inner++;
             }
-            outerCard = (Card) outerCard.getNext();
-            offsetCard = (Card) offsetCard.getNext();
+            outerCard = (replayItem) outerCard.getNext();
+            offsetCard = (replayItem) offsetCard.getNext();
 
             outer++;
         }
@@ -258,29 +261,29 @@ public class Board<Node> extends LinkedList<Card> {
         searchValidMoves();
         return validMove;
     }
-    public Card removeCard() throws IllegalStateException {
+    public replayItem removeCard() throws IllegalStateException {
         if (size == 0) {throw new IllegalStateException("Cannot remove a Card from an empty deck");}
         if (firstCard != null) {                                      //removing the very first card
-            Card first = (Card) firstCard;                          //tmp the first card
-            firstCard = (Card) firstCard.getNext();                //update the new first card
+            replayItem first = (replayItem) firstCard;                          //tmp the first card
+            firstCard = (replayItem) firstCard.getNext();                //update the new first card
             size--;
             setlastcard();                                          //for integrity
             return first;                                           //if card removed return with it
         } else return null;                                          //return a BIG null
     }
-    public Card removeACard(Card aCard) throws CardNotFoundException {    //remove a specific card from the deck
-        Card c = (Card) firstCard;
-        Card tmpCard = c;
+    public replayItem removeACard(replayItem aCard) throws CardNotFoundException {    //remove a specific card from the deck
+        replayItem c = (replayItem) firstCard;
+        replayItem tmpCard = c;
         int i = 1;
         boolean found = false;
         if (c.getCardValue() == aCard.getCardValue() &&   //remove the first element
                 c.getStrSuit() == aCard.getStrSuit()) {   //of the list
-            firstCard = (Card) c.getNext();
+            firstCard = (replayItem) c.getNext();
             size--;
             found = true;
         }
         while (!found && c.getNext() != null) {             //iterate throughout the list
-            Card n = (Card) c.getNext();
+            replayItem n = (replayItem) c.getNext();
 
             if (n.getCardValue() == aCard.getCardValue() &&  //if both suit and value ar the same
                     n.getStrSuit() == aCard.getStrSuit()) {  //we found the card
@@ -289,7 +292,7 @@ public class Board<Node> extends LinkedList<Card> {
                 c.setNext(n.getNext());            //skipp the next card
                 tmpCard = n;
             } else {
-                c = (Card) c.getNext();         //if no match, get the next card
+                c = (replayItem) c.getNext();         //if no match, get the next card
             }
             i++;
         }//endwhile
@@ -299,25 +302,25 @@ public class Board<Node> extends LinkedList<Card> {
         return tmpCard;
     }
     public void setlastcard() {
-        Card card = firstCard;
+        replayItem card = firstCard;
         while (card.getNext() != null) {
-            card = (Card) card.getNext();
+            card = (replayItem) card.getNext();
         }
         lastCard = card;
     }
-    public Card removeNthCard(int num) throws NullPointerException {    //remove a specific card number from the board
+    public replayItem removeNthCard(int num) throws NullPointerException {    //remove a specific card number from the board
         //if (num < 1 || num > size)
         //throw new NullPointerException("The selection is out of range");
-        Card currentCard = (Card) firstCard;
-        Card tmpCard = currentCard;
+        replayItem currentCard = (replayItem) firstCard;
+        replayItem tmpCard = currentCard;
         if (num == 1) {                                             //retrieve the very first card
-            firstCard = (Card) currentCard.getNext();
+            firstCard = (replayItem) currentCard.getNext();
             size--;
             return tmpCard;
         }
         int counter = 0;
         while (counter <= num && currentCard.getNext() != null) {             //iterate throughout the board
-            Card nextCard = (Card) currentCard.getNext();
+            replayItem nextCard = (replayItem) currentCard.getNext();
 
             if (num - 2 == counter) {                                   //we found the card
                 size--;
@@ -325,7 +328,7 @@ public class Board<Node> extends LinkedList<Card> {
                 tmpCard = nextCard;
 
             } else {
-                currentCard = (Card) currentCard.getNext();         //if no match, get the next card
+                currentCard = (replayItem) currentCard.getNext();         //if no match, get the next card
             }
             counter++;
         }//endwhile
@@ -335,19 +338,37 @@ public class Board<Node> extends LinkedList<Card> {
     public int getNthCardValue(int num) throws NullPointerException {    //get the Nth card point value
         if (num < 1 || num > size)
             throw new NullPointerException("The selection is out of range");
-        Card currentCard = (Card) firstCard;
+        replayItem currentCard = (replayItem) firstCard;
         if (num == 1) return firstCard.getCardValue();               //get the very first card
         int counter = 0;
         while (counter <= num && currentCard.getNext() != null) {         //iterate throughout the list
-            Card nextCard = (Card) currentCard.getNext();
+            replayItem nextCard = (replayItem) currentCard.getNext();
 
             if (num - 2 == counter) {                                     //we found the card, return its points
                 return nextCard.getCardValue();
             } else {
-                currentCard = (Card) currentCard.getNext();             //if no match, continue
+                currentCard = (replayItem) currentCard.getNext();             //if no match, continue
             }
             counter++;
         }//endwhile
         return -1;
+    }
+    public replayItem getNthCard(int num) throws NullPointerException {    //get the Nth card point value
+        if (num < 1 || num > size)
+            throw new NullPointerException("The selection is out of range");
+        replayItem currentCard = (replayItem) firstCard;
+        if (num == 1) return firstCard;               //get the very first card
+        int counter = 0;
+        while (counter <= num && currentCard.getNext() != null) {         //iterate throughout the list
+            replayItem nextCard = (replayItem) currentCard.getNext();
+
+            if (num - 2 == counter) {                                     //we found the card, return its points
+                return nextCard;
+            } else {
+                currentCard = (replayItem) currentCard.getNext();             //if no match, continue
+            }
+            counter++;
+        }//endwhile
+        return new replayItem(0,"h");
     }
 }
