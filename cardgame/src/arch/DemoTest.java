@@ -6,7 +6,7 @@ public class DemoTest {
         App app = new App();
         Deck d = new Deck(true,true);
         Board b = new Board();
-        app.playMode(true);
+        app.playMode(true, true);
     }
 
     public static void main(String[] args) throws LockedDeckException, EmptyDeckException {

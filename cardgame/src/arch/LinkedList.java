@@ -1,11 +1,11 @@
 package arch;
 
-public class LinkedList<T>{
+public class LinkedList<T> {
     protected Node<T> firstNode;
     protected Node<T> lastNode;
     protected Integer size;
 
-    public LinkedList(){
+    public LinkedList() {
         firstNode = null;
         lastNode = null;
         size = 0;
@@ -13,30 +13,28 @@ public class LinkedList<T>{
 
     public Node<T> getFirstNode() {
         return firstNode;
-    }               //return first node
+    } //return first node
 
     public Node<T> getLastNode() {
         return lastNode;
-    }                 //return last node
+    }//return last node
 
     public int getSize() {
         return size;
-    }                             //get size
-
+    } //get size
 
     public boolean isEmpty() {
         return size == 0;
-    }                    //is empty
+    } //is empty
 
-    protected void updateLastElement(){
-        //this method updates the last node, which is required if we remove exactly the last element from the list
-        if (getSize() == 0){
+    protected void updateLastElement() {
+        //this method updates the last node, which is required
+        // if we remove exactly the last element from the list
+        if (getSize() == 0) {
             lastNode = null;
-        }
-        else if (getSize() == 1){
+        } else if (getSize() == 1) {
             lastNode = firstNode;
-        }
-        else {
+        } else {
             Node<T> currentNode = firstNode;
             while (currentNode != null) {
                 if (currentNode.getNext() != null) {
@@ -49,37 +47,36 @@ public class LinkedList<T>{
         }
     }
 
-    protected void updateLastElement(String newEntry){
-        //this method updates the last node, which is required if we remove exactly the last element from the list
-            lastNode = new Node<T>((T) newEntry);
-            lastNode.setNext(null);
-            size++;
-
-    }
-
-    public boolean addNewEntry(Object newEntry) {               //add new element to the data structure
+    //add new element to the data structure
+    public boolean addNewEntry(Object newEntry) {
         Node<T> newNode = new Node<T>((T) newEntry);
         newNode.setNext(firstNode);
         firstNode = newNode;
         size++;
-        if (getSize() == 1) //if we have only one node, we record it as a last node
+        //if we have only one node, we record it as a last node
+        if (getSize() == 1)
             lastNode = newNode;
         return true;
     }
 
-    public T removeFirstElement() {                             //remove the first element without getting the object
-        if(firstNode != null){
+    //remove the first element without getting the object
+    public T removeFirstElement() throws NullPointerException{
+        if(size==0){
+            throw new NullPointerException("Empty list");
+        }
+        if (firstNode != null) {
             T result = firstNode.getData();
             firstNode = firstNode.getNext();
             size--;
             updateLastElement();
             return result;
-        }else return null;
+        } else return null;
     }
 
-    public boolean removeFirstElement(Object anEntry) {         //remove first, return with first
+    //remove first, return with first
+    public boolean removeSpfecific(Object anEntry) {
         Node<T> nodeToRemove = findEntry((T) anEntry);
-        if(nodeToRemove.getData() == null){
+        if (nodeToRemove.getData() == null) {
             return false;
         }
         Node<T> node = firstNode;
@@ -90,31 +87,34 @@ public class LinkedList<T>{
         return true;
     }
 
-    public void clear() {                                      //clear everything
+    //clear everything
+    protected void clear() {
         firstNode.setNext(null);
         lastNode.setNext(null);
         size = 0;
     }
 
-    protected Node<T> findEntry(T nodeToFind){                 //find a given entry
+    //find a given entry
+    protected Node<T> findEntry(T nodeToFind) {
         Node<T> currentNode = firstNode;
         boolean found = false;
 
-        while(!found && currentNode.getNext() != null){
+        while (!found && currentNode.getNext() != null) {
             if (currentNode.getData().equals(nodeToFind)) {
                 found = true;
                 return currentNode;
-            } else{
+            } else {
                 currentNode = currentNode.getNext();
             }
         }
-        if (lastNode.getData() == nodeToFind){
+        if (lastNode.getData() == nodeToFind) {
             return lastNode;
         }
         return null;
     }
 
-    public T[] toArray() throws EmptyDeckException{             //representation in array
+    //representation in array
+    public T[] toArray() throws EmptyDeckException {
         T[] resultArray = (T[]) new Object[size];
 
         if (isEmpty() == true)
@@ -131,7 +131,8 @@ public class LinkedList<T>{
         return resultArray;
     }
 
-    public String toString(){                                    //string representation
+    //string representation
+    public String toString() {
         if (isEmpty() == true) {
             return "[]";
         }

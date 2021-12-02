@@ -206,7 +206,6 @@ public class BoardTest {
         System.out.println("Valid Moves: " + st.getSize());
 
 
-        //[A♦  A♠  5♣  6♠  7♦  9♥  9♦  K♥  K♣]
         Board be = new Board();
         be.addNewEntry(new Card(1,"s"));
         be.addNewEntry(new Card(1,"d"));

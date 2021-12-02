@@ -1,7 +1,7 @@
 package arch;
 
 public class CardTest {
-    public static void state(Card c){
+    public static void state(Card c) {
         System.out.println("Suit:\t\t\t" + c.getSuit());
         System.out.println("isFace:\t\t\t" + c.isFace());
         System.out.println("cardValue:\t\t" + c.getCardValue());
@@ -9,7 +9,17 @@ public class CardTest {
     }
 
     public static void main(String[] args) {
-        // Creation of a linked List
+
+        //creation of an empty card
+        System.out.println("\nCard empty = new Card();");
+        try {
+            Card empty = new Card();
+        }catch(NullPointerException e){
+            System.out.println(e);
+        }
+
+
+        // Creation of a card array
         LinkedList<String> myList = new LinkedList<>();
         System.out.println("\n\nCreating a set of suit:");
         Card[] cards = new Card[13];
@@ -27,28 +37,28 @@ public class CardTest {
         cards[11] = new Card(2, "S");
         cards[12] = new Card(1, "S");
 
-        for (Card c :cards) {
+        for (Card c : cards) {
             state(c);
         }
         System.out.println("\n\nCreating an invalid suit:");
-        try{
-            Card card1 = new Card(1,"x");
-        }catch (IllegalStateException ex){
+        try {
+            Card card1 = new Card(1, "x");
+        } catch (IllegalStateException ex) {
             System.out.println(ex.getMessage());
         }
 
         System.out.println("\n\nCreating w an invalid suit:");
-        try{
-        Card card1 = new Card(1,"x");
-            Card card2 = new Card(15,"s");
-        }catch (IllegalStateException ex){
+        try {
+            Card card1 = new Card(1, "x");
+            Card card2 = new Card(15, "s");
+        } catch (IllegalStateException ex) {
             System.out.println(ex.getMessage());
         }
 
         System.out.println("\n\nCreating card w invalid value:");
-        try{
-        Card card2 = new Card(15,"s");
-        }catch (IllegalStateException ex){
+        try {
+            Card card2 = new Card(15, "s");
+        } catch (IllegalStateException ex) {
             System.out.println(ex.getMessage());
         }
     }

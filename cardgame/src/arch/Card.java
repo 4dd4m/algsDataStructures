@@ -5,20 +5,29 @@ public class Card extends Node{
     private boolean isFace;
     private int     cardValue;
 
-    public Card(int pValue, String pSuit) {                                     //new Card(1,"h");
+    //new Card(1,"h");
+    public Card(int pValue, String pSuit) {
         super(pValue);
         cardValue = validateValue(pValue);
         setIsFaceCard();
         validateSuit(pSuit);
     }
-    private int validateValue(int value) throws IllegalStateException{         //card point value restriction
+
+    public Card() throws NullPointerException {
+        throw new NullPointerException("Empty Card Cannot Be created");
+    }
+
+    //card point value restriction
+    private int validateValue(int value) throws IllegalStateException{
         if (value >= 1 && value <= 13){
             return value;
         }else{
             throw new IllegalStateException("Invalid CardValue: " + value);
         }
     }
-    private void validateSuit(String pSuit) throws IllegalStateException{       //nice suit display
+
+    //nice suit display
+    private void validateSuit(String pSuit) throws IllegalStateException{
         String suitLower = pSuit.toLowerCase();
         String tmpsuit = "";
         if (suitLower.equals("s") || suitLower.equals("c") || suitLower.equals("h") || suitLower.equals("d")){
@@ -69,7 +78,7 @@ public class Card extends Node{
         strSuit = s;
         validateSuit(s);
     }
-    public String getSuit()   {return suit;}                                    //♠ ♦ ♣ ♥ format
+    public String getSuit()   {return suit;}                                    //format
     public boolean isFace()   {return isFace;}                                  //is JQK?
     public String getStrSuit(){return strSuit;}                                 //get the suit in "h","s","p" format
     private void setIsFaceCard(){isFace = cardValue >= 11 && cardValue <= 13;}  //set faceCard

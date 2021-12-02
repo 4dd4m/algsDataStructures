@@ -8,7 +8,7 @@ public class DeckTest {
             System.out.println("Last Card: " + d.getLastCard().toString());
             System.out.println("Deck Size: " + d.toArray().length);
             System.out.println("ToString: " + d.toString());
-            System.out.println("Shuffle: false");
+            System.out.println("Shuffle: " + d.isLocked());
             System.out.println("\n");
         } catch (EmptyDeckException e) {
             System.out.println("Empty Deck\n");

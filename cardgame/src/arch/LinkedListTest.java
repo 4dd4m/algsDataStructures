@@ -45,14 +45,22 @@ public class LinkedListTest {
             myList.removeFirstElement();
             state(myList);
             System.out.println("\n\nRemoving an element in the middle (T):");
-            myList.removeFirstElement("T");
+            myList.removeSpfecific("T");
             state(myList);
             System.out.println("\n\nRemoving the last element (A):");
-            System.out.println("\n\nThe first element swaps slip to the deleted posish");
-            myList.removeFirstElement("A");
+            System.out.println("The first element swaps slip to the deleted posish");
+            myList.removeSpfecific("A");
             state(myList);
             System.out.println("\n\nEmpty the list:");
             myList.clear();
             state(myList);
+        System.out.println("Remove an element from an empty list");
+            try {
+                myList.removeFirstElement();
+                state(myList);
+            }catch (NullPointerException e ){
+                System.out.println(e);
+            }
+
     }
 }
