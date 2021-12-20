@@ -15,9 +15,7 @@ public class Stack<T> implements StackInterface{
         return (int[]) firstNode.getData();
     }
 
-    public int getSize() {
-        return size;
-    }
+    public int getSize() { return size; }
 
     public boolean isEmpty() {
         return size == 0;

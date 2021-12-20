@@ -1,5 +1,4 @@
 package arch;
-
 import java.util.Scanner;
 
 public class App {

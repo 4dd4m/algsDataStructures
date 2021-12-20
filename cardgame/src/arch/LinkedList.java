@@ -5,6 +5,7 @@ public class LinkedList<T> {
     protected Node<T> lastNode;
     protected Integer size;
 
+
     public LinkedList() {
         firstNode = null;
         lastNode = null;

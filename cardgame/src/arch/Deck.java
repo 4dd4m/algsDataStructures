@@ -1,7 +1,7 @@
 package arch;
 import java.util.Random;
 public class Deck<T> extends LinkedList implements CardInterFace {
-    private Card next, firstCard, lastCard;
+    private Card firstCard, lastCard;
     private final int SHUFFLESIZE = 1000;
     private boolean lock = false;
     private static final String[] SUITS = {"h","d","s","c"};
